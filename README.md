@@ -1,6 +1,9 @@
 # Go-Lang Fiber Project
 
-Sample Go-Lang Fiber Project Structure
+System Pembayaran SPP API
+
+[API Documentation](https://whimsical.com/erd-table-api-map-Umr1mzU2SY3jAqJyDa7KMX)
+[API Contract](https://www.notion.so/e785eb0dfdc245659df81b6e91bf40a5?v=2176e61ec8d744d4af0b35e613895ad9)
 
 ## How to use
 - Please clone or download this repository.
