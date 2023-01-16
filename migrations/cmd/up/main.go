@@ -19,7 +19,7 @@ import (
 
 func main() {
 	postgresUp()
-	mysqlUp()
+	// mysqlUp()
 }
 
 func postgresUp() {

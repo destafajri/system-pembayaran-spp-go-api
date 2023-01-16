@@ -19,7 +19,7 @@ import (
 
 func main() {
 	postgresDown()
-	mysqlDown()
+	// mysqlDown()
 }
 
 func postgresDown() {
