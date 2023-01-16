@@ -4,7 +4,8 @@ Sample Go-Lang Fiber Project Structure
 
 ## How to use
 - Please clone or download this repository.
-- Prepare postgres database, or use docker, you can type
+- Prepare postgres database
+- if you want to use docker, you can type
 ```
 docker-compose up
 ```
@@ -51,6 +52,90 @@ make run
 ## Architecture
 
 Controller -> Service -> Repository
+
+## Project Structure example
+.
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── README.md
+├── config
+│   ├── config.go
+│   ├── fiber.go
+│   ├── mongo.go
+│   ├── mysql.go
+│   └── postgres.go
+├── docker-compose.yml
+├── exception
+│   ├── error.go
+│   ├── error_handler.go
+│   └── validation_error.go
+├── go.mod
+├── go.sum
+├── helper
+│   ├── generate_jwt.go
+│   └── generate_password.go
+├── internal
+│   ├── controller
+│   │   ├── controller.go
+│   │   ├── product
+│   │   │   ├── controller_test.go
+│   │   │   ├── product_controller.go
+│   │   │   ├── product_controller_test.go
+│   │   │   └── product_router.go
+│   │   └── user
+│   │       ├── user_controller.go
+│   │       └── user_router.go
+│   ├── entity
+│   │   ├── product.go
+│   │   └── user.go
+│   ├── middlewares
+│   │   ├── JWTMiddleware.go
+│   │   ├── config.go
+│   │   ├── crypto.go
+│   │   ├── jwks.go
+│   │   └── jwt_claims.go
+│   ├── model
+│   │   ├── product_model.go
+│   │   └── user_model.go
+│   ├── repository
+│   │   ├── product_repository
+│   │   │   └── product_repository_impl.go
+│   │   ├── product_repository.go
+│   │   ├── user_repository
+│   │   │   └── user_repository_impl.go
+│   │   └── user_repository.go
+│   ├── service
+│   │   ├── product_service
+│   │   │   └── product_service_impl.go
+│   │   ├── product_service.go
+│   │   ├── user_service.go
+│   │   └── user_service_impl
+│   │       └── user_service_impl.go
+│   └── validation
+│       ├── product_validation.go
+│       └── user_validation.go
+├── main.go
+├── migrations
+│   ├── cmd
+│   │   ├── down
+│   │   │   └── main.go
+│   │   └── up
+│   │       └── main.go
+│   ├── mysql
+│   │   ├── 000001_create_sample_tables.up.sql
+│   │   ├── 000001_down_sample_tables.down.sql
+│   │   ├── 000002_create_users_tables.up.sql
+│   │   └── 000002_down_users_table.down.sql
+│   └── postgres
+│       ├── 000001_create_sample_tables.up.sql
+│       ├── 000001_down_sample_tables.down.sql
+│       ├── 000002_create_users_tables.up.sql
+│       └── 000002_down_users_table.down.sql
+├── responses
+│   └── web_response.go
+├── test.http
+└── vendor
 
 ## Addition 
 
