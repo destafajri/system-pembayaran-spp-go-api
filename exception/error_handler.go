@@ -11,7 +11,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	if ok {
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
 			Code:   fiber.StatusUnprocessableEntity,
-			Status: "BAD_REQUEST",
+			Status: "Error Validation",
 			Message:   err.Error(),
 		})
 	}
