@@ -10,15 +10,15 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	_, ok := err.(ValidationError)
 	if ok {
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "Error Validation",
-			Message:   err.Error(),
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "Error Validation",
+			Message: err.Error(),
 		})
 	}
 
 	return ctx.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-		Code:   fiber.StatusUnprocessableEntity,
-		Status: "UnprocessableEntity",
-		Message:   err.Error(),
+		Code:    fiber.StatusUnprocessableEntity,
+		Status:  "UnprocessableEntity",
+		Message: err.Error(),
 	})
 }
