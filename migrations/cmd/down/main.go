@@ -31,17 +31,17 @@ func postgresDown() {
 
 	db, err := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
 	exception.PanicIfNeeded(err)
-	
+
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	exception.PanicIfNeeded(err)
 
-    m, err := migrate.NewWithDatabaseInstance(
-        "file://migrations/postgres",
-        "postgres", driver)
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations/postgres",
+		"postgres", driver)
 
 	exception.PanicIfNeeded(err)
 	m.Down()
-	
+
 	log.Println("Migration down Postgres Successfully!")
 }
 
@@ -51,18 +51,18 @@ func mysqlDown() {
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
-	
+
 	database, err := sql.Open("mysql", os.Getenv("MYSQL_URL"))
 	exception.PanicIfNeeded(err)
 
 	driver, err := mysql.WithInstance(database, &mysql.Config{})
 	exception.PanicIfNeeded(err)
 
-    m, err := migrate.NewWithDatabaseInstance(
-        "file://migrations/mysql",
-        "mysql", driver)
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations/mysql",
+		"mysql", driver)
 	exception.PanicIfNeeded(err)
-    m.Down()
+	m.Down()
 
 	log.Println("Migration down MySQL Successfully!")
 }

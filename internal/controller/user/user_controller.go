@@ -1,6 +1,9 @@
 package user
 
 import (
+	"log"
+	"time"
+
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
 	"github.com/destafajri/system-pembayaran-spp-go-api/responses"
@@ -15,92 +18,31 @@ func NewUserController(UserService *service.UserService) UserController {
 	return UserController{UserService: *UserService}
 }
 
-func (controller *UserController) Register(c *fiber.Ctx) error {
-	var request model.RegisterUserPayload
-	
+func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
+	var request model.CreateAdminRequest
+
 	err := c.BodyParser(&request)
 	if err != nil {
+		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
 		})
 	}
 
-	response, err := controller.UserService.Register(&request)
+	response, err := controller.UserService.CreateAdmin(&request, time.Now())
 	if err != nil {
+		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
 		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
 		Code:   201,
-		Status: "OK",
-		Data:   response,
-	})
-}
-
-func (controller *UserController) GetData(c *fiber.Ctx) error {
-	var request model.GetUserPayload
-	
-	err := c.BodyParser(&request)
-	if err != nil {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
-		})
-	}
-
-	response, err := controller.UserService.GetData(&request)
-	if err != nil {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
-		Code:   200,
-		Status: "OK",
-		Data:   response,
-	})
-}
-
-func (controller *UserController) Login(c *fiber.Ctx) error {
-	var request model.LoginPayload
-	
-	err := c.BodyParser(&request)
-	if err != nil {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
-		})
-	}
-
-	response, err := controller.UserService.Login(&request)
-	if err != nil {
-		if err.Error() == "You're Unauthorized" {
-			return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-				Code:   fiber.StatusUnauthorized,
-				Status: "errors",
-				Data:   err.Error(),
-			})
-		}
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:   fiber.StatusUnprocessableEntity,
-			Status: "errors",
-			Data:   err.Error(),
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
-		Code:   200,
 		Status: "OK",
 		Data:   response,
 	})

@@ -2,8 +2,10 @@ package entity
 
 type UserEntity struct {
 	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Phone    string `json:"phone"`
-	Role     string `json:"role"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
+	IsActive bool   `json:"is_active"`
+	Timestamp
 }

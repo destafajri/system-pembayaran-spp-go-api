@@ -1,12 +1,11 @@
 package service
 
 import (
+	"time"
+
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
 type UserService interface {
-	Register(users *model.RegisterUserPayload) (*model.RegisterUserResponse, error)
-	GetData(*model.GetUserPayload) (*model.GetUserResponse , error)
-	Login(*model.LoginPayload) (*model.LoginResponse, error)
+	CreateAdmin(request *model.CreateAdminRequest, timestamp time.Time) (*model.CreateAdminResponse, error)
 }
-
