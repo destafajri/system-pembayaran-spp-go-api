@@ -23,14 +23,14 @@ type CreateAdminResponse struct {
 	entity.Timestamp
 }
 
-// type LoginRequest struct{
-// 	Username string `json:"username"`
-// 	Password string `json:"password"`
-// }
+type LoginRequest struct{
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
-// type LoginResponse struct{
-// 	Token string `json:"token"`
-// }
+type LoginResponse struct{
+	Token string `json:"token"`
+}
 
 // validation
 func ValidateCreateUserInput(request *CreateAdminRequest) error {
