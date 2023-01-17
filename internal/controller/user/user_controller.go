@@ -43,7 +43,8 @@ func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
 		Code:   201,
-		Status: "OK",
+		Status: "SUCCESS",
+		Message: "Create Admin Success",
 		Data:   response,
 	})
 }
