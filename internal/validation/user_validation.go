@@ -35,6 +35,15 @@ func PhonenumberValidation(input string) (bool, error) {
 }
 
 func UsernameValidation(input string) (bool, error) {
+	space := strings.Contains(input, " ")
+	if space {
+		return false, &exception.ValidationError{
+			Message: "Password should not containt white space",
+			Field:   "password",
+			Tag:     "strong_password",
+		}
+	}
+
 	if len([]rune(input)) < 4 || len([]rune(input)) > 30 {
 		return false, errors.New("username length should be more than 4 digits and less than 30")
 	}
