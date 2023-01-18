@@ -97,14 +97,34 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
+	// claims example
 	claim, _ := jwts.GetClaims(token)
 
-	metadata.Total = 100
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin or guru",
+		})
+	}
+
+	response, total, err := controller.UserService.GetListUser(&metadata)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	metadata.Total = total
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Get List User Success",
 		Meta:    metadata,
-		Data:    claim,
+		Data:    response,
 	})
 }
