@@ -5,6 +5,6 @@ import (
 )
 
 type UserRepository interface {
-	Login(phone string) (*entity.UserEntity, error)
+	Login(username string) (*entity.UserEntity, error)
 	CreateAdmin(users *entity.UserEntity) (*entity.UserEntity, error)
 }

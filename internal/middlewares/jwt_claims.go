@@ -13,16 +13,16 @@ var (
 
 // claims struct
 type JWTClaim struct {
-	Name  string
-	Phone string
-	Role  string
+	ID       string
+	Username string
+	Role     string
 	jwt.RegisteredClaims
 }
 
-func GetRole(claims *JWTClaim) string{
+func GetRole(claims *JWTClaim) string {
 	return claims.Role
 }
 
-func GetClaims(claims *JWTClaim) *JWTClaim{
+func GetClaims(claims *JWTClaim) *JWTClaim {
 	return claims
 }

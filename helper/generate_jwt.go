@@ -4,17 +4,17 @@ import (
 	"log"
 	"time"
 
-	middleware"github.com/destafajri/system-pembayaran-spp-go-api/internal/middlewares"
+	middleware "github.com/destafajri/system-pembayaran-spp-go-api/internal/middlewares"
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GenerateJwtToken(name, phone, role string) (string, error) {
+func GenerateJwtToken(id, username, role string) (string, error) {
 	//proses pembuatan token jwt
 	expTime := time.Now().Add(time.Minute * 300)
 	claims := middleware.JWTClaim{
-		Name:   name,
-		Phone: phone,
-		Role: role,
+		ID:       id,
+		Username: username,
+		Role:     role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "github.com/destafajri",
 			ExpiresAt: jwt.NewNumericDate(expTime),
