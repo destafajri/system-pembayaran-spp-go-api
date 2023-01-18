@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/helper"
+	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
@@ -20,7 +20,7 @@ func (user *userServiceimpl) Login(request *model.LoginRequest) (*model.LoginRes
 	}
 
 	//Generate JWT
-	token, err := helper.GenerateJwtToken(userInfo.ID, userInfo.Username, userInfo.Role)
+	token, err := jwts.GenerateJwtToken(userInfo.ID, userInfo.Username, userInfo.Role)
 	if err != nil {
 		return nil, err		
 	}

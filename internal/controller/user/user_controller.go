@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/middlewares"
+	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
@@ -94,10 +94,10 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 	var (
 		metadata = meta.MetadataFromURL(c)
-		token, _ = middlewares.JWTAuthorizationHeader(c)
+		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
-	claim, _ := middlewares.GetClaims(token)
+	claim, _ := jwts.GetClaims(token)
 
 	metadata.Total = 100
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
