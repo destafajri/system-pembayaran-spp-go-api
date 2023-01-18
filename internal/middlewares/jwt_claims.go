@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log"
 	"os"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -21,12 +22,14 @@ type JWTClaim struct {
 
 func GetID(token string) (string, error) {
 	claims := &JWTClaim{}
+
 	// parsing token jwt
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(JWT_SECRET_KEY), nil
 	})
 
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 
@@ -35,12 +38,14 @@ func GetID(token string) (string, error) {
 
 func GetUsername(token string) (string, error) {
 	claims := &JWTClaim{}
+
 	// parsing token jwt
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(JWT_SECRET_KEY), nil
 	})
 
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 
@@ -49,12 +54,14 @@ func GetUsername(token string) (string, error) {
 
 func GetRole(token string) (string, error) {
 	claims := &JWTClaim{}
+
 	// parsing token jwt
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(JWT_SECRET_KEY), nil
 	})
 
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 
@@ -63,13 +70,16 @@ func GetRole(token string) (string, error) {
 
 func GetClaims(token string) (*JWTClaim, error) {
 	claims := &JWTClaim{}
+	
 	// parsing token jwt
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(JWT_SECRET_KEY), nil
 	})
 
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
+
 	return claims, nil
 }
