@@ -84,7 +84,7 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
 		Code:   fiber.StatusOK,
 		Status: "SUCCESS",
-		Message: "Create Admin Success",
+		Message: "Login Success",
 		Data:   response,
 	})
 }
