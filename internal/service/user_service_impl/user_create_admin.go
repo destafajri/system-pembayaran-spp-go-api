@@ -48,11 +48,20 @@ func (user *userServiceimpl) CreateAdmin(request *model.CreateAdminRequest, time
 		Timestamp: t,
 	}
 
-	resp, err := user.userRepository.CreateAdmin(&input)
+	users, err := user.userRepository.CreateAdmin(&input)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return resp, nil
+	resp := model.CreateAdminResponse{
+		ID:        users.ID,
+		Email:     users.Email,
+		Username:  users.Username,
+		Role:      users.Role,
+		IsActive:  users.IsActive,
+		Timestamp: users.Timestamp,
+	}
+
+	return &resp, nil
 }

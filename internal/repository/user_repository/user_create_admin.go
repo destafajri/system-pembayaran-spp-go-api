@@ -6,10 +6,9 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
-func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*model.CreateAdminResponse, error){
+func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*entity.UserEntity, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -39,15 +38,15 @@ func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*model.Cr
 	_, err := user.db.Exec(query, values...)
 	if err != nil {
 		log.Println(err)
-		return nil, errors.New("failed inserting create users")
+		return nil, errors.New("user already exist")
 	}
 
-	resp := model.CreateAdminResponse{
-		ID: users.ID,
-		Email: users.Email,
-		Username: users.Username,
-		Role: users.Role,
-		IsActive: users.IsActive,
+	resp := entity.UserEntity{
+		ID:        users.ID,
+		Email:     users.Email,
+		Username:  users.Username,
+		Role:      users.Role,
+		IsActive:  users.IsActive,
 		Timestamp: users.Timestamp,
 	}
 
