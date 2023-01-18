@@ -93,9 +93,11 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 
 func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 	var (
-		metadata      = meta.MetadataFromURL(c)
-		authHeader, _ = middlewares.JWTAuthorizationHeader(c)
+		metadata = meta.MetadataFromURL(c)
+		token, _ = middlewares.JWTAuthorizationHeader(c)
 	)
+
+	claim, _ := middlewares.GetClaims(token)
 
 	metadata.Total = 100
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
@@ -103,6 +105,6 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 		Status:  "SUCCESS",
 		Message: "Get List User Success",
 		Meta:    metadata,
-		Data:    authHeader,
+		Data:    claim,
 	})
 }

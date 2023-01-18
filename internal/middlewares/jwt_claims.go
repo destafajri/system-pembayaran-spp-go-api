@@ -19,10 +19,57 @@ type JWTClaim struct {
 	jwt.RegisteredClaims
 }
 
-func GetRole(claims *JWTClaim) string {
-	return claims.Role
+func GetID(token string) (string, error) {
+	claims := &JWTClaim{}
+	// parsing token jwt
+	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(JWT_SECRET_KEY), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return claims.ID, nil
 }
 
-func GetClaims(claims *JWTClaim) *JWTClaim {
-	return claims
+func GetUsername(token string) (string, error) {
+	claims := &JWTClaim{}
+	// parsing token jwt
+	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(JWT_SECRET_KEY), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Username, nil
+}
+
+func GetRole(token string) (string, error) {
+	claims := &JWTClaim{}
+	// parsing token jwt
+	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(JWT_SECRET_KEY), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Role, nil
+}
+
+func GetClaims(token string) (*JWTClaim, error) {
+	claims := &JWTClaim{}
+	// parsing token jwt
+	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(JWT_SECRET_KEY), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return claims, nil
 }
