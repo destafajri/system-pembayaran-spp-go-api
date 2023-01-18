@@ -3,10 +3,11 @@ package meta
 import (
 	"errors"
 	"math"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 // ErrInvalidMetadata is an error when metadata is invalid.
@@ -27,7 +28,7 @@ type MetadataPage struct {
 }
 
 // MetadataFromURL gets metadata from the given request url.
-func MetadataFromURL(u url.Values) Metadata {
+func MetadataFromURL(u *fiber.Ctx) Metadata {
 	return Metadata{
 		Pagination: PaginationFromURL(u),
 		Filtering:  FilterFromURL(u),
@@ -51,14 +52,14 @@ type PaginationPage struct {
 	TotalPage int `json:"total_page"`
 }
 
-// PaginationFromURL gets pagination meta from request URL.
-func PaginationFromURL(u url.Values) Pagination {
+// PaginationFromURL Querys pagination meta from request URL.
+func PaginationFromURL(u *fiber.Ctx) Pagination {
 	p := Pagination{
 		PerPage: DefaultPerPage,
 		Page:    1,
 	}
 
-	pps := u.Get("per_page")
+	pps := u.Query("per_page")
 	if v, err := strconv.Atoi(pps); err == nil {
 		if v <= 0 {
 			v = DefaultPerPage
@@ -67,7 +68,7 @@ func PaginationFromURL(u url.Values) Pagination {
 		p.PerPage = v
 	}
 
-	ps := u.Get("page")
+	ps := u.Query("page")
 	if v, err := strconv.Atoi(ps); err == nil {
 		if v < 1 {
 			v = 1
@@ -94,19 +95,19 @@ type Filtering struct {
 	Status    string `json:"status,omitempty"`
 }
 
-// FilterFromURL gets filter values from query params.
-func FilterFromURL(u url.Values) Filtering {
+// FilterFromURL Querys filter values from query params.
+func FilterFromURL(u *fiber.Ctx) Filtering {
 	f := Filtering{
 		OrderBy:   "created_at",
 		OrderType: SortAscending,
 	}
 
-	ob := u.Get("order_by")
+	ob := u.Query("order_by")
 	if len(ob) != 0 {
 		f.OrderBy = strings.ToLower(strings.ToLower(ob))
 	}
 
-	ot := u.Get("order_type")
+	ot := u.Query("order_type")
 	if len(ot) != 0 {
 		ot = strings.TrimSpace(strings.ToLower(ot))
 		if ot == SortDescending {
@@ -114,23 +115,23 @@ func FilterFromURL(u url.Values) Filtering {
 		}
 	}
 
-	search := strings.TrimSpace(u.Get("search"))
+	search := strings.TrimSpace(u.Query("search"))
 	if len(search) == 0 {
-		search = strings.TrimSpace(u.Get("keyword"))
+		search = strings.TrimSpace(u.Query("keyword"))
 	}
 
 	if len(search) != 0 {
 		f.Search = search
 	}
 
-	searchBy := strings.TrimSpace(u.Get("search_by"))
+	searchBy := strings.TrimSpace(u.Query("search_by"))
 	if len(searchBy) != 0 {
 		f.SearchBy = searchBy
 	}
 
-	status := strings.TrimSpace(u.Get("status"))
+	status := strings.TrimSpace(u.Query("status"))
 	if len(status) == 0 {
-		status = strings.TrimSpace(u.Get("keyword"))
+		status = strings.TrimSpace(u.Query("keyword"))
 	}
 
 	if len(status) != 0 {
@@ -146,9 +147,9 @@ type DateRange struct {
 	End   time.Time `json:"end"`
 }
 
-func DateRangeFromURL(u url.Values, field string, startQuery, endQuery string) (*DateRange, error) {
-	ts := u.Get(startQuery)
-	te := u.Get(endQuery)
+func DateRangeFromURL(u *fiber.Ctx, field string, startQuery, endQuery string) (*DateRange, error) {
+	ts := u.Query(startQuery)
+	te := u.Query(endQuery)
 	if len(ts) == 0 || len(te) == 0 {
 		return nil, nil
 	}
@@ -159,7 +160,7 @@ func DateRangeFromURL(u url.Values, field string, startQuery, endQuery string) (
 		End:   time.Time{},
 	}
 
-	if v := u.Get(field); len(v) != 0 {
+	if v := u.Query(field); len(v) != 0 {
 		dr.Field = strings.TrimSpace(strings.ToLower(v))
 	}
 

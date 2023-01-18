@@ -6,6 +6,7 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
+	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/responses"
 	"github.com/gofiber/fiber/v2"
 )
@@ -42,10 +43,10 @@ func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
-		Code:   201,
-		Status: "SUCCESS",
+		Code:    201,
+		Status:  "SUCCESS",
 		Message: "Create Admin Success",
-		Data:   response,
+		Data:    response,
 	})
 }
 
@@ -82,9 +83,23 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
-		Code:   fiber.StatusOK,
-		Status: "SUCCESS",
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
 		Message: "Login Success",
-		Data:   response,
+		Data:    response,
+	})
+}
+
+func (controller *UserController) GetListUser(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+	)
+
+	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List User Success",
+		Meta:    metadata,
+		Data:    "response",
 	})
 }
