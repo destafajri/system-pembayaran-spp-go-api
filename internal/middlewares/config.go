@@ -186,9 +186,9 @@ func makeCfg(config []Config) (cfg Config) {
 		cfg.ErrorHandler = func(c *fiber.Ctx, err error) error {
 			if err.Error() == "Missing or malformed JWT" {
 				return c.Status(fiber.StatusBadRequest).JSON(responses.WebResponse{
-					Code:   fiber.StatusBadRequest,
-					Status: "Missing JWT",
-					Data:   "Missing or malformed JWT",
+					Code:    fiber.StatusBadRequest,
+					Status:  "Missing JWT",
+					Message: "Missing or malformed JWT",
 				})
 			}
 
@@ -198,24 +198,24 @@ func makeCfg(config []Config) (cfg Config) {
 				// token invalid
 				response := "Unauthorized"
 				return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-					Code:   fiber.StatusUnauthorized,
-					Status: "Invalid Signature",
-					Data:   response,
+					Code:    fiber.StatusUnauthorized,
+					Status:  "Invalid Signature",
+					Message: response,
 				})
 			case jwt.ValidationErrorExpired:
 				// token expired
 				response := "Unauthorized, Token expired!"
 				return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-					Code:   fiber.StatusUnauthorized,
-					Status: "Token Expired",
-					Data:   response,
+					Code:    fiber.StatusUnauthorized,
+					Status:  "Token Expired",
+					Message: response,
 				})
 			default:
 				response := "You're Unauthorized"
 				return c.Status(fiber.StatusBadRequest).JSON(responses.WebResponse{
-					Code:   fiber.StatusBadRequest,
-					Status: "Unauthorized",
-					Data:   response,
+					Code:    fiber.StatusBadRequest,
+					Status:  "Unauthorized",
+					Message: response,
 				})
 			}
 		}
