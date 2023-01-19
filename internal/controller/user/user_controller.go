@@ -97,9 +97,8 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
-	// claims example
+	// claims
 	claim, _ := jwts.GetClaims(token)
-
 	if claim.Role != "admin" {
 		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnauthorized,
@@ -125,6 +124,41 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 		Status:  "SUCCESS",
 		Message: "Get List User Success",
 		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
+	var (
+		user_id  = c.Params("user_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	response, err := controller.UserService.GetDetailUser(user_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail User Success",
 		Data:    response,
 	})
 }

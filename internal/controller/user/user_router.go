@@ -9,5 +9,5 @@ func (controller *UserController) Route(app *fiber.App, api fiber.Router) {
 	app.Post("/login", controller.Login)
 
 	api.Get("/user/admin/list", controller.GetListUser)
-	// api.Get("/user/admin/detail/:user_id", controller)
+	api.Get("/user/admin/detail/:user_id", controller.GetDetailUser)
 }

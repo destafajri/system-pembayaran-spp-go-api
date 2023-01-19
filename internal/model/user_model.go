@@ -41,6 +41,15 @@ type GetListUserResponse struct{
 	entity.Timestamp
 }
 
+type GetDetailUser struct{
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
+	IsActive bool   `json:"is_active"`
+	entity.Timestamp
+}
+
 // validation
 func ValidateCreateUserInput(request *CreateAdminRequest) error {
 	err := validation.ValidateStruct(request,
