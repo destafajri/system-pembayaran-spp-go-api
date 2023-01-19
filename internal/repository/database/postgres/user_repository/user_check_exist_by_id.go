@@ -3,10 +3,15 @@ package user_repository
 import (
 	"errors"
 	"log"
+
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 )
 
 func (user *userImplementation) CekUserExistByID(id string) (bool, error){
-	query := `SELECT id FROM users WHERE id = $1 AND deleted_at IS NULL AND is_active is true LIMIT 1;`
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+
+	query := `SELECT id FROM users WHERE id = $1 AND deleted_at IS NULL LIMIT 1;`
 
 	rows, err := user.db.Query(query, id)
 	if err != nil {

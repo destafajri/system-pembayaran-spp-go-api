@@ -6,6 +6,7 @@ import (
 
 	"github.com/nullism/bqb"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta/param"
@@ -13,6 +14,9 @@ import (
 )
 
 func (user *userImplementation) GetListUser(meta *meta.Metadata) ([]model.GetListUserResponse, int, error) {
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+
 	q, err := param.FromMetadata(meta, user)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, "parsing metadata into query")

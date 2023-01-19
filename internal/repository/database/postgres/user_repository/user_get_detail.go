@@ -6,10 +6,14 @@ import (
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
 func (user *userImplementation) GetDetailUser(id string) (*model.GetDetailUser, error) {
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+
 	var data model.GetDetailUser
 
 	statement, params, err := user.getDetailQuery(id)
@@ -53,8 +57,6 @@ func (repo *userImplementation) getDetailQuery(id string) (string, []interface{}
 				FROM
 					users
 				WHERE id = ?
-					AND
-				is_active is true
 		`, id)
 
 	// build.Print()

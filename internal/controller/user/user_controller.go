@@ -162,3 +162,71 @@ func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *UserController) ActivateUser(c *fiber.Ctx) error {
+	var (
+		user_id  = c.Params("user_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.UserService.ActivateUser(user_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Activate User Success",
+	})
+}
+
+func (controller *UserController) DeactivateUser(c *fiber.Ctx) error {
+	var (
+		user_id  = c.Params("user_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.UserService.DeactivateUser(user_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Deactivate User Success",
+	})
+}

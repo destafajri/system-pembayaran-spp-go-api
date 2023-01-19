@@ -12,4 +12,6 @@ type UserService interface {
 	Login(request *model.LoginRequest) (*model.LoginResponse, error)
 	GetListUser(meta *meta.Metadata) ([]model.GetListUserResponse, int, error)
 	GetDetailUser(user_id string) (*model.GetDetailUser, error)
+	ActivateUser(id string, timestamp time.Time) error
+	DeactivateUser(id string, timestamp time.Time) error
 }
