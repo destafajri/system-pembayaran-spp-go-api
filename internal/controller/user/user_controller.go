@@ -105,7 +105,7 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 			Code:    fiber.StatusUnauthorized,
 			Status:  "Error",
 			Message: "unauthorized",
-			Error:   "unauthorized as admin or guru",
+			Error:   "unauthorized as admin",
 		})
 	}
 

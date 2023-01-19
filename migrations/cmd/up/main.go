@@ -19,7 +19,7 @@ import (
 
 func main() {
 	postgresUp()
-	// mysqlUp()
+	// mysqlUp()  //uncomment it you want to migrate mysql
 }
 
 func postgresUp() {

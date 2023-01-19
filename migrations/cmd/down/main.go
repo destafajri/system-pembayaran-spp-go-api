@@ -19,7 +19,7 @@ import (
 
 func main() {
 	postgresDown()
-	// mysqlDown()
+	// mysqlDown() //uncomment it you want to migrate mysql
 }
 
 func postgresDown() {

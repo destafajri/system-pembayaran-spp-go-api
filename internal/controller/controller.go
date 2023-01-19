@@ -5,7 +5,7 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/controller/user"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/middlewares"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/repository/user_repository"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/repository/database/postgres/user_repository"
 	user_service "github.com/destafajri/system-pembayaran-spp-go-api/internal/service/user_service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
