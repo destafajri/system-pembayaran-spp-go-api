@@ -8,54 +8,31 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type CreateAdminRequest struct {
+type CreateGuruRequest struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Nama     string `json:"nama"`
 }
 
-type CreateAdminResponse struct {
+type CreateGuruResponse struct {
 	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
 	Email    string `json:"email"`
 	Username string `json:"username"`
-	Role     string `json:"role"`
-	IsActive bool   `json:"is_active"`
-	entity.Timestamp
-}
-
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type LoginResponse struct {
-	Token string `json:"token"`
-}
-
-type GetListUserResponse struct {
-	ID       string `json:"id"`
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Role     string `json:"role"`
-	IsActive bool   `json:"is_active"`
-	entity.Timestamp
-}
-
-type GetDetailUser struct {
-	ID       string `json:"id"`
-	Email    string `json:"email"`
-	Username string `json:"username"`
+	Nama     string `json:"nama"`
 	Role     string `json:"role"`
 	IsActive bool   `json:"is_active"`
 	entity.Timestamp
 }
 
 // validation
-func ValidateCreateUserInput(request *CreateAdminRequest) error {
+func ValidateCreateGuruInput(request *CreateGuruRequest) error {
 	err := validation.ValidateStruct(request,
 		validation.Field(&request.Email, validation.Required),
 		validation.Field(&request.Password, validation.Required),
 		validation.Field(&request.Username, validation.Required),
+		validation.Field(&request.Nama, validation.Required),
 	)
 
 	if err != nil {
