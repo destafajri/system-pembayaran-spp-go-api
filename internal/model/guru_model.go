@@ -26,6 +26,17 @@ type CreateGuruResponse struct {
 	entity.Timestamp
 }
 
+type GetListGuruResponse struct {
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Nama     string `json:"nama"`
+	Role     string `json:"role"`
+	IsActive bool   `json:"is_active"`
+	entity.Timestamp
+}
+
 // validation
 func ValidateCreateGuruInput(request *CreateGuruRequest) error {
 	err := validation.ValidateStruct(request,

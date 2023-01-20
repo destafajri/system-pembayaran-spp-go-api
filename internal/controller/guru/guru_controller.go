@@ -7,6 +7,7 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
+	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/responses"
 	"github.com/gofiber/fiber/v2"
 )
@@ -60,6 +61,31 @@ func (controller *GuruController) CreateGuru(c *fiber.Ctx) error {
 		Code:    201,
 		Status:  "SUCCESS",
 		Message: "Create Guru Success",
+		Data:    response,
+	})
+}
+
+func (controller *GuruController) GetListGuru(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+	)
+
+	response, total, err := controller.GuruService.GetListGuru(&metadata)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	metadata.Total = total
+	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List Guru Success",
+		Meta:    metadata,
 		Data:    response,
 	})
 }
