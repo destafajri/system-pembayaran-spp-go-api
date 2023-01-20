@@ -7,12 +7,22 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 )
 
-func (guru *guruServiceimpl) GetListGuru(meta *meta.Metadata) ([]model.GetListGuruResponse, int, error) {
-	resp, total, err := guru.guruRepository.GetListGuru(meta)
-	if err != nil {
-		log.Println(err)
-		return nil, 0, err
+func (guru *guruServiceimpl) GetListGuru(role string, meta *meta.Metadata) ([]model.GetListGuruResponse, int, error) {
+	if role == "admin" {
+		resp, total, err := guru.guruRepository.GetListGuruAdmin(meta)
+		if err != nil {
+			log.Println(err)
+			return nil, 0, err
+		}
+	
+		return resp, total, nil
+	} else {
+		resp, total, err := guru.guruRepository.GetListGuruNonAdmin(meta)
+		if err != nil {
+			log.Println(err)
+			return nil, 0, err
+		}
+	
+		return resp, total, nil
 	}
-
-	return resp, total, nil
 }

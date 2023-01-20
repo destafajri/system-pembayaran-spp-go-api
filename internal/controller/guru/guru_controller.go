@@ -68,9 +68,12 @@ func (controller *GuruController) CreateGuru(c *fiber.Ctx) error {
 func (controller *GuruController) GetListGuru(c *fiber.Ctx) error {
 	var (
 		metadata = meta.MetadataFromURL(c)
+		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
-	response, total, err := controller.GuruService.GetListGuru(&metadata)
+	claim, _ := jwts.GetClaims(token)
+
+	response, total, err := controller.GuruService.GetListGuru(claim.Role, &metadata)
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -81,11 +84,46 @@ func (controller *GuruController) GetListGuru(c *fiber.Ctx) error {
 	}
 
 	metadata.Total = total
-	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Get List Guru Success",
 		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *GuruController) GetDetailGuru(c *fiber.Ctx) error {
+	var (
+		guru_id  = c.Params("guru_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" && claim.Role != "guru" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin or guru",
+		})
+	}
+
+	response, err := controller.GuruService.GetDetailGuru(claim.Role, guru_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Guru Success",
 		Data:    response,
 	})
 }

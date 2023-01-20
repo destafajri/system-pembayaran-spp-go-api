@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (guru *guruImplementation) GetListGuru(meta *meta.Metadata) ([]model.GetListGuruResponse, int, error) {
+func (guru *guruImplementation) GetListGuruNonAdmin(meta *meta.Metadata) ([]model.GetListGuruResponse, int, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -28,7 +28,7 @@ func (guru *guruImplementation) GetListGuru(meta *meta.Metadata) ([]model.GetLis
 		data     []model.GetListGuruResponse
 	)
 
-	statement, params, err := guru.getlistQuery(notCount, q)
+	statement, params, err := guru.getlistForNonAdminQuery(notCount, q)
 	if err != nil {
 		log.Println(err)
 		return nil, 0, errors.Wrap(err, "build statement query to get guru from database")
@@ -59,7 +59,7 @@ func (guru *guruImplementation) GetListGuru(meta *meta.Metadata) ([]model.GetLis
 	}
 
 	// count total data
-	statement, params, err = guru.getlistQuery(count, q)
+	statement, params, err = guru.getlistForNonAdminQuery(count, q)
 	if err != nil {
 		log.Println(err)
 		return nil, 0, errors.Wrap(err, "build statement query to get guru from database")
@@ -74,7 +74,7 @@ func (guru *guruImplementation) GetListGuru(meta *meta.Metadata) ([]model.GetLis
 	return data, total, nil
 }
 
-func (guru *guruImplementation) getlistQuery(is_count bool, q *param.Query) (string, []interface{}, error) {
+func (guru *guruImplementation) getlistForNonAdminQuery(is_count bool, q *param.Query) (string, []interface{}, error) {
 	var selectx *bqb.Query
 
 	if is_count {
@@ -107,6 +107,8 @@ func (guru *guruImplementation) getlistQuery(is_count bool, q *param.Query) (str
 			users
 		ON
 			guru.user_id = users.id
+		WHERE
+			guru.is_active is true
 	`)
 
 	if is_count {

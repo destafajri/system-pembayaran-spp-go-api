@@ -9,5 +9,6 @@ import (
 
 type GuruService interface {
 	CreateGuru(request *model.CreateGuruRequest, timestamp time.Time) (*model.CreateGuruResponse, error)
-	GetListGuru(meta *meta.Metadata) ([]model.GetListGuruResponse, int, error)
+	GetListGuru(role string, meta *meta.Metadata) ([]model.GetListGuruResponse, int, error)
+	GetDetailGuru(role, guru_id string) (*model.GetDetailGuruResponse, error)
 }

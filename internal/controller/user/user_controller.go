@@ -100,7 +100,7 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnauthorized,
 			Status:  "Error",
 			Message: "unauthorized",
@@ -119,7 +119,7 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 	}
 
 	metadata.Total = total
-	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Get List User Success",
@@ -137,7 +137,7 @@ func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnauthorized,
 			Status:  "Error",
 			Message: "unauthorized",
@@ -155,7 +155,7 @@ func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Get Detail User Success",
@@ -172,7 +172,7 @@ func (controller *UserController) ActivateUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnauthorized,
 			Status:  "Error",
 			Message: "unauthorized",
@@ -190,7 +190,7 @@ func (controller *UserController) ActivateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Activate User Success",
@@ -206,7 +206,7 @@ func (controller *UserController) DeactivateUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnauthorized,
 			Status:  "Error",
 			Message: "unauthorized",
@@ -224,7 +224,7 @@ func (controller *UserController) DeactivateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Deactivate User Success",
