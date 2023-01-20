@@ -1,8 +1,71 @@
 package guru_repository
 
-import "github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+import (
+	"encoding/json"
+
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/nullism/bqb"
+	"github.com/pkg/errors"
+)
 
 func (guru *guruImplementation) GetDetailGuruAdmin(guru_id string) (*model.GetDetailGuruResponse, error){
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
 
-	return nil, nil
+	var data model.GetDetailGuruResponse
+
+	statement, params, err := guru.getDetailForAdminQuery(guru_id)
+	if err != nil {
+		return nil, errors.Wrap(err, "build statement query to get guru detail from database")
+	}
+
+	rows, err := guru.db.Query(statement, params...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var bson []byte
+
+		if err := rows.Scan(&bson); err != nil {
+			return nil, errors.Wrap(err, "scanning guru from database")
+		}
+		if err := json.Unmarshal(bson, &data); err != nil {
+			return nil, errors.Wrap(err, "unmarshalling guru bson")
+		}
+	}
+
+	return &data, nil
+}
+
+func (repo *guruImplementation) getDetailForAdminQuery(id string) (string, []interface{}, error) {
+	build := bqb.New(`
+			SELECT 
+			json_build_object(
+						'id', guru.id,
+						'user_id', users.id,
+						'email', users.email,
+						'username', users.username,
+						'nama', guru.nama,
+						'role', users.role,
+						'is_active', guru.is_active,
+						'created_at', users.created_at::timestamptz,
+						'updated_at', users.updated_at::timestamptz,
+						'deleted_at', users.deleted_at::timestamptz
+			)
+			FROM
+				guru
+			JOIN
+				users
+			ON
+				guru.user_id = users.id
+			WHERE 
+				guru.id = ?
+		`, id)
+
+	// build.Print()
+
+	return build.ToPgsql()
 }

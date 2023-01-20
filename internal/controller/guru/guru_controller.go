@@ -69,9 +69,8 @@ func (controller *GuruController) GetListGuru(c *fiber.Ctx) error {
 	var (
 		metadata = meta.MetadataFromURL(c)
 		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
 	)
-
-	claim, _ := jwts.GetClaims(token)
 
 	response, total, err := controller.GuruService.GetListGuru(claim.Role, &metadata)
 	if err != nil {
@@ -97,18 +96,8 @@ func (controller *GuruController) GetDetailGuru(c *fiber.Ctx) error {
 	var (
 		guru_id  = c.Params("guru_id")
 		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
 	)
-
-	// claims
-	claim, _ := jwts.GetClaims(token)
-	if claim.Role != "admin" && claim.Role != "guru" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin or guru",
-		})
-	}
 
 	response, err := controller.GuruService.GetDetailGuru(claim.Role, guru_id)
 	if err != nil {
