@@ -43,13 +43,13 @@ func (guru *guruImplementation) CreateGuru(userReq *entity.UserEntity, guruReq *
 	}
 
 	query2 := `INSERT INTO guru(
-		id,
-		user_id,
-		nama,
-		is_active
-	)
-	VALUES ($1, $2, $3, $4)
-`
+			id,
+			user_id,
+			nama,
+			is_active
+		)
+		VALUES ($1, $2, $3, $4)
+	`
 	value := []interface{}{
 		guruReq.ID,
 		guruReq.UserID,
