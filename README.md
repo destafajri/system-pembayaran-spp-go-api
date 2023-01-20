@@ -7,7 +7,10 @@ System Pembayaran SPP API
 
 ## How to use
 - Please clone or download this repository.
-- Prepare postgres database
+```
+git clone https://github.com/destafajri/system-pembayaran-spp-go-api.git
+```
+- Prepare postgres database, for this project i use [SUPABASE](https://supabase.com/)
 - if you want to use docker, you can type
 ```
 docker-compose up
@@ -43,6 +46,10 @@ make migrate-up
 - run the golang server
 ```
 make run
+```
+or
+```
+go run main.go
 ```
 
 ## Framework
