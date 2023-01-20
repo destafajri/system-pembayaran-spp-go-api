@@ -11,7 +11,7 @@ func (guru *guruImplementation) CekGuruExistByID(guru_id string) (bool, error){
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
-	query := `SELECT id FROM guru WHERE id = $1 AND is_active is true LIMIT 1;`
+	query := `SELECT id FROM guru WHERE id = $1 LIMIT 1;`
 
 	rows, err := guru.db.Query(query, guru_id)
 	if err != nil {
