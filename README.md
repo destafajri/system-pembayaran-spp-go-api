@@ -19,32 +19,14 @@ OR
 ```
 docker-compose up -d
 ```
-- add .env file to setup your database connection
-```
-MONGO_URI=mongodb://mongo:mongo@localhost:27017
-MONGO_DATABASE=golang_test
-MONGO_POOL_MIN=10
-MONGO_POOL_MAX=100
-MONGO_MAX_IDLE_TIME_SECOND=60
-
-POSTGRES_URL="user=postgres password=[your-password] host=[your-host] port=5432 dbname=postgres"
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=[your-password]
-POSTGRES_HOST=[your-host]
-POSTGRES_PORT=5432
-POSTGRES_DB=postgres
-
-MYSQL_URL="root:secret@tcp(localhost:3306)/sample?parseTime=true"
-
-KEY_JWT="nafonFajriSecretKeyJWTdkdjfnfja"
-```
+- add .env file to setup your database connection and configuration
 - `migrator tools` from [golang migrate](https://github.com/golang-migrate/migrate)
 - to create, drop, and alter table migration you can read this [link](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
-- run
+- run to migarte your database schema
 ```
 make migrate-up
 ```
-- run the golang server
+- to run the golang server
 ```
 make run
 ```
