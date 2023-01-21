@@ -38,9 +38,9 @@ func UsernameValidation(input string) (bool, error) {
 	space := strings.Contains(input, " ")
 	if space {
 		return false, &exception.ValidationError{
-			Message: "Password should not containt white space",
-			Field:   "password",
-			Tag:     "strong_password",
+			Message: "username should not containt white space",
+			Field:   "username",
+			Tag:     "strong_username",
 		}
 	}
 

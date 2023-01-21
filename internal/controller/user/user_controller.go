@@ -13,11 +13,11 @@ import (
 )
 
 type UserController struct {
-	UserService service.UserService
+	userService service.UserService
 }
 
-func NewUserController(UserService *service.UserService) UserController {
-	return UserController{UserService: *UserService}
+func NewUserController(userService *service.UserService) UserController {
+	return UserController{userService: *userService}
 }
 
 func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
@@ -33,7 +33,7 @@ func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := controller.UserService.CreateAdmin(&request, time.Now())
+	response, err := controller.userService.CreateAdmin(&request, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -64,7 +64,7 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := controller.UserService.Login(&request)
+	response, err := controller.userService.Login(&request)
 	if err != nil {
 		if err.Error() == "unauthorized" {
 			log.Println(err)
@@ -108,7 +108,7 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 		})
 	}
 
-	response, total, err := controller.UserService.GetListUser(&metadata)
+	response, total, err := controller.userService.GetListUser(&metadata)
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -145,7 +145,7 @@ func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := controller.UserService.GetDetailUser(user_id)
+	response, err := controller.userService.GetDetailUser(user_id)
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -180,7 +180,7 @@ func (controller *UserController) ActivateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	err := controller.UserService.ActivateUser(user_id, time.Now())
+	err := controller.userService.ActivateUser(user_id, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -214,7 +214,7 @@ func (controller *UserController) DeactivateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	err := controller.UserService.DeactivateUser(user_id, time.Now())
+	err := controller.userService.DeactivateUser(user_id, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{

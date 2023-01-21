@@ -14,7 +14,7 @@ func (guru *guruImplementation) GetUserID(guru_id string) (string, error) {
 	rows := guru.db.QueryRow(query, guru_id)
 	if err := rows.Scan(&user_id); err != nil {
 		log.Println(err)
-		return "", errors.Wrap(err, "getting user id")
+		return "", errors.New("user not found")
 	}
 
 	return user_id, nil

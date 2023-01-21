@@ -13,11 +13,11 @@ import (
 )
 
 type GuruController struct {
-	GuruService service.GuruService
+	guruService service.GuruService
 }
 
-func NewGuruController(GuruService *service.GuruService) GuruController {
-	return GuruController{GuruService: *GuruService}
+func NewGuruController(guruService *service.GuruService) GuruController {
+	return GuruController{guruService: *guruService}
 }
 
 func (controller *GuruController) CreateGuru(c *fiber.Ctx) error {
@@ -47,7 +47,7 @@ func (controller *GuruController) CreateGuru(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := controller.GuruService.CreateGuru(&request, time.Now())
+	response, err := controller.guruService.CreateGuru(&request, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -72,7 +72,7 @@ func (controller *GuruController) GetListGuru(c *fiber.Ctx) error {
 		claim, _ = jwts.GetClaims(token)
 	)
 
-	response, total, err := controller.GuruService.GetListGuru(claim.Role, &metadata)
+	response, total, err := controller.guruService.GetListGuru(claim.Role, &metadata)
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -99,7 +99,7 @@ func (controller *GuruController) GetDetailGuru(c *fiber.Ctx) error {
 		claim, _ = jwts.GetClaims(token)
 	)
 
-	response, err := controller.GuruService.GetDetailGuru(claim.Role, guru_id)
+	response, err := controller.guruService.GetDetailGuru(claim.Role, guru_id)
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -134,7 +134,7 @@ func (controller *GuruController) ActivateGuru(c *fiber.Ctx) error {
 		})
 	}
 
-	err := controller.GuruService.ActivateGuru(guru_id, time.Now())
+	err := controller.guruService.ActivateGuru(guru_id, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
@@ -168,7 +168,7 @@ func (controller *GuruController) DeactivateGuru(c *fiber.Ctx) error {
 		})
 	}
 
-	err := controller.GuruService.DeactivateGuru(guru_id, time.Now())
+	err := controller.guruService.DeactivateGuru(guru_id, time.Now())
 	if err != nil {
 		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
