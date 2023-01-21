@@ -34,8 +34,36 @@ type GetDetailKelasResponse struct {
 	entity.Timestamp
 }
 
+type UpdateDetailKelasRequest struct {
+	GuruID string `json:"guru_id"`
+	Kelas  string `json:"kelas"`
+}
+
+type UpdateDetailKelasResponse struct {
+	ID        string `json:"id"`
+	GuruID    string `json:"guru_id"`
+	Kelas     string `json:"kelas"`
+	entity.Timestamp
+}
+
 // validation
 func ValidateCreateKelasInput(request *CreateKelasRequest) error {
+	err := validation.ValidateStruct(request,
+		validation.Field(&request.GuruID, validation.Required),
+		validation.Field(&request.Kelas, validation.Required),
+	)
+
+	if err != nil {
+		log.Println(err)
+		panic(exception.ValidationError{
+			Message: err.Error(),
+		})
+	}
+
+	return nil
+}
+
+func ValidateUpdateKelasInput(request *UpdateDetailKelasRequest) error {
 	err := validation.ValidateStruct(request,
 		validation.Field(&request.GuruID, validation.Required),
 		validation.Field(&request.Kelas, validation.Required),
