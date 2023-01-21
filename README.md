@@ -39,7 +39,7 @@ MYSQL_URL="root:secret@tcp(localhost:3306)/sample?parseTime=true"
 KEY_JWT="nafonFajriSecretKeyJWTdkdjfnfja"
 ```
 - `migrator tools` from [golang migrate](https://github.com/golang-migrate/migrate)
-- to create, drop, and alter table migration tou can read this [link](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
+- to create, drop, and alter table migration you can read this [link](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
 - run
 ```
 make migrate-up
