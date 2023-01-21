@@ -13,7 +13,7 @@ type CreateSiswaRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Kelas    string `json:"kelas"`
-	NIS      string `json:"nis"`
+	NIS      int    `json:"nis"`
 	Nama     string `json:"nama"`
 	Angkatan string `json:"angkatan"`
 }
@@ -25,8 +25,23 @@ type CreateSiswaResponse struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`
 	Role     string `json:"role"`
-	NIS      string `json:"nis"`
+	NIS      int    `json:"nis"`
 	Nama     string `json:"nama"`
+	Angkatan string `json:"angkatan"`
+	IsActive bool   `json:"is_active"`
+	entity.Timestamp
+}
+
+type GetListSiswaResponse struct {
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	KelasID  string `json:"kelas_id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
+	NIS      int    `json:"nis"`
+	Nama     string `json:"nama"`
+	Kelas    string `json:"kelas"`
 	Angkatan string `json:"angkatan"`
 	IsActive bool   `json:"is_active"`
 	entity.Timestamp

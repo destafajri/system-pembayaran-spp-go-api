@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (siswa *siswaImplementation) CekNIS(nim string) (string, error) {
+func (siswa *siswaImplementation) CekNIS(nim int) (string, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
