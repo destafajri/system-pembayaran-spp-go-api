@@ -43,20 +43,20 @@ func (user *userImplementation) GetDetailUser(id string) (*model.GetDetailUser, 
 
 func (repo *userImplementation) getDetailQuery(id string) (string, []interface{}, error) {
 	build := bqb.New(`
-		SELECT 
-		json_build_object(
-					'id', id,
-					'email', email,
-					'username', username,
-					'role', role,
-					'is_active', is_active,
-					'created_at', created_at::timestamptz,
-					'updated_at', updated_at::timestamptz,
-					'deleted_at', deleted_at::timestamptz
-				)
-				FROM
-					users
-				WHERE id = ?
+			SELECT 
+			json_build_object(
+						'id', id,
+						'email', email,
+						'username', username,
+						'role', role,
+						'is_active', is_active,
+						'created_at', created_at::timestamptz,
+						'updated_at', updated_at::timestamptz,
+						'deleted_at', deleted_at::timestamptz
+					)
+			FROM
+				users
+			WHERE id = ?
 		`, id)
 
 	// build.Print()

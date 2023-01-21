@@ -23,16 +23,16 @@ type CreateAdminResponse struct {
 	entity.Timestamp
 }
 
-type LoginRequest struct{
+type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type LoginResponse struct{
+type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-type GetListUserResponse struct{
+type GetListUserResponse struct {
 	ID       string `json:"id"`
 	Email    string `json:"email"`
 	Username string `json:"username"`
@@ -41,7 +41,7 @@ type GetListUserResponse struct{
 	entity.Timestamp
 }
 
-type GetDetailUser struct{
+type GetDetailUser struct {
 	ID       string `json:"id"`
 	Email    string `json:"email"`
 	Username string `json:"username"`

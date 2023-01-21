@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validation"
+	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
 	"github.com/pkg/errors"
 )
 
