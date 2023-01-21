@@ -54,14 +54,5 @@ func (user *userServiceimpl) CreateAdmin(request *model.CreateAdminRequest, time
 		return nil, err
 	}
 
-	resp := model.CreateAdminResponse{
-		ID:        users.ID,
-		Email:     users.Email,
-		Username:  users.Username,
-		Role:      users.Role,
-		IsActive:  users.IsActive,
-		Timestamp: users.Timestamp,
-	}
-
-	return &resp, nil
+	return users, nil
 }

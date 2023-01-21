@@ -6,9 +6,10 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
-func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*entity.UserEntity, error) {
+func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*model.CreateAdminResponse, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -41,7 +42,7 @@ func (user *userImplementation) CreateAdmin(users *entity.UserEntity) (*entity.U
 		return nil, errors.New("user already exist")
 	}
 
-	resp := entity.UserEntity{
+	resp := model.CreateAdminResponse{
 		ID:        users.ID,
 		Email:     users.Email,
 		Username:  users.Username,
