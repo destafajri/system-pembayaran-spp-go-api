@@ -1,6 +1,8 @@
 package siswa_service
 
 import (
+	"errors"
+	_ "errors"
 	"log"
 	"time"
 
@@ -31,6 +33,12 @@ func (siswa *siswaServiceimpl) CreateSiswa(request *model.CreateSiswaRequest, ti
 	pass, err := validations.PasswordValidation(request.Password)
 	if err != nil && !pass {
 		return nil, err
+	}
+
+	// cek nim
+	nimFound , _ := siswa.siswaRepository.CekNIS(request.NIS)
+	if nimFound != "" {
+		return nil, errors.New("NIM already exist")
 	}
 
 	t := entity.Timestamp{

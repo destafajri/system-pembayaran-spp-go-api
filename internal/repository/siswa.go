@@ -9,4 +9,5 @@ type SiswaRepository interface {
 	CreateSiswa(user *entity.UserEntity, siswaReq *entity.SiswaEntity) (*model.CreateSiswaResponse, error)
 
 	GetKelasID(kelas string) (string, error)
+	CekNIS(nim string) (string, error)
 }

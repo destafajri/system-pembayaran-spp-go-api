@@ -1,12 +1,12 @@
 package siswa_repository
 
 import (
-	"errors"
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/pkg/errors"
 )
 
 func (siswa *siswaImplementation) CreateSiswa(userReq *entity.UserEntity, siswaReq *entity.SiswaEntity) (*model.CreateSiswaResponse, error) {
@@ -66,7 +66,7 @@ func (siswa *siswaImplementation) CreateSiswa(userReq *entity.UserEntity, siswaR
 	_, err = siswa.db.Exec(query2, value...)
 	if err != nil {
 		log.Println(err)
-		return nil, errors.New("guru already exist")
+		return nil, errors.New("siswa already exist")
 	}
 
 	resp := model.CreateSiswaResponse{
