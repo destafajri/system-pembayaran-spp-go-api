@@ -13,9 +13,16 @@ type CreateKelasRequest struct {
 }
 
 type CreateKelasResponse struct {
-	ID       string `json:"id"`
-	GuruID   string `json:"guru_id"`
-	Kelas    string `json:"kelas"`
+	ID     string `json:"id"`
+	GuruID string `json:"guru_id"`
+	Kelas  string `json:"kelas"`
+}
+
+type GetListKelasResponse struct {
+	ID        string `json:"id"`
+	GuruID    string `json:"guru_id"`
+	WaliKelas string `json:"walikelas"`
+	Kelas     string `json:"kelas"`
 }
 
 // validation

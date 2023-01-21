@@ -16,14 +16,18 @@ func (kelas *kelasImplementation) CreateKelas(kelasReq *entity.KelasEntity) (*mo
 	query := `INSERT INTO kelas(
 			id,
 			guru_id,
-			kelas
+			kelas,
+			created_at,
+			updated_at
 		)
-		VALUES ($1, $2, $3)
+		VALUES ($1, $2, $3, $4, $5)
 	`
 	values := []interface{}{
 		kelasReq.ID,
 		kelasReq.GuruID,
 		kelasReq.Kelas,
+		kelasReq.CreatedAt,
+		kelasReq.UpdatedAt,
 	}
 
 	_, err := kelas.db.Exec(query, values...)
