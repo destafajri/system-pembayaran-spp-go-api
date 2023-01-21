@@ -68,7 +68,7 @@ func (controller *KelasController) CreateKelas(c *fiber.Ctx) error {
 func (controller *KelasController) GetListKelas(c *fiber.Ctx) error {
 	var (
 		metadata = meta.MetadataFromURL(c)
-		_, err = jwts.JWTAuthorizationHeader(c)
+		_, err   = jwts.JWTAuthorizationHeader(c)
 	)
 
 	if err != nil {
@@ -93,5 +93,114 @@ func (controller *KelasController) GetListKelas(c *fiber.Ctx) error {
 		Message: "Get List Kelas Success",
 		Meta:    metadata,
 		Data:    response,
+	})
+}
+
+func (controller *KelasController) GetDetailKelas(c *fiber.Ctx) error {
+	var (
+		kelas_id = c.Params("kelas_id")
+		_, err   = jwts.JWTAuthorizationHeader(c)
+	)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	response, err := controller.kelasService.GetDetailKelas(kelas_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Kelas Success",
+		Data:    response,
+	})
+}
+
+func (controller *KelasController) UpdateDetailKelas(c *fiber.Ctx) error {
+	var (
+		kelas_id = c.Params("kelas_id")
+		request  model.UpdateDetailKelasRequest
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := c.BodyParser(&request)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	resp, err := controller.kelasService.UpdateDetailKelas(kelas_id, &request)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Update Kelas Success",
+		Data:    resp,
+	})
+}
+
+func (controller *KelasController) DeleteKelas(c *fiber.Ctx) error {
+	var (
+		kelas_id = c.Params("kelas_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.kelasService.DeleteKelas(kelas_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Delete Kelas Success",
 	})
 }

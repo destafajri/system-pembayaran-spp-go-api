@@ -7,7 +7,7 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 )
 
-func (guru *guruImplementation) CekGuruExistByID(guru_id string) (bool, error){
+func (guru *guruImplementation) CekGuruExistByID(guru_id string) (bool, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
