@@ -68,7 +68,7 @@ func (controller *KelasController) CreateKelas(c *fiber.Ctx) error {
 func (controller *KelasController) GetListKelas(c *fiber.Ctx) error {
 	var (
 		metadata = meta.MetadataFromURL(c)
-		_, err = jwts.JWTAuthorizationHeader(c)
+		_, err   = jwts.JWTAuthorizationHeader(c)
 	)
 
 	if err != nil {
@@ -92,6 +92,35 @@ func (controller *KelasController) GetListKelas(c *fiber.Ctx) error {
 		Status:  "SUCCESS",
 		Message: "Get List Kelas Success",
 		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *KelasController) GetDetailKelas(c *fiber.Ctx) error {
+	var (
+		kelas_id  = c.Params("kelas_id")
+		_, err = jwts.JWTAuthorizationHeader(c)
+	)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	response, err := controller.kelasService.GetDetailKelas(kelas_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Kelas Success",
 		Data:    response,
 	})
 }

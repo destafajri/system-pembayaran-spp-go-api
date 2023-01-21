@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -23,6 +24,14 @@ type GetListKelasResponse struct {
 	GuruID    string `json:"guru_id"`
 	WaliKelas string `json:"walikelas"`
 	Kelas     string `json:"kelas"`
+}
+
+type GetDetailKelasResponse struct {
+	ID        string `json:"id"`
+	GuruID    string `json:"guru_id"`
+	WaliKelas string `json:"walikelas"`
+	Kelas     string `json:"kelas"`
+	entity.Timestamp
 }
 
 // validation

@@ -10,4 +10,5 @@ import (
 type KelasService interface {
 	CreateKelas(request *model.CreateKelasRequest, timestamp time.Time) (*model.CreateKelasResponse, error)
 	GetListKelas(meta *meta.Metadata) ([]model.GetListKelasResponse, int, error)
+	GetDetailKelas(kelas_id string) (*model.GetDetailKelasResponse, error)
 }

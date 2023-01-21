@@ -9,6 +9,8 @@ import (
 type KelasRepository interface {
 	CreateKelas(kelas *entity.KelasEntity) (*model.CreateKelasResponse, error)
 	GetListKelas(meta *meta.Metadata) ([]model.GetListKelasResponse, int, error)
+	GetDetailKelas(kelas_id string) (*model.GetDetailKelasResponse, error)
 
 	CekGuruExistByID(guru_id string) (bool, error)
+	CekKelasExistByID(kelas_id string) (bool, error)
 }
