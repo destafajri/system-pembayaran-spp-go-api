@@ -148,3 +148,71 @@ func (controller *SiswaController) GetDetailSiswa(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *SiswaController) ActivateSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.ActivateSiswa(siswa_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Activate Siswa Success",
+	})
+}
+
+func (controller *SiswaController) DeactivateSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.DeactivateSiswa(siswa_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Deactivate Siswa Success",
+	})
+}

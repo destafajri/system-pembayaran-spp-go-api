@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
@@ -15,6 +17,10 @@ type SiswaRepository interface {
 	GetDetailSiswaForAdmin(siswa_id string) (*model.GetDetailSiswaResponse, error)
 	GetDetailSiswaNonAdmin(siswa_id string) (*model.GetDetailSiswaResponse, error)
 
+	ActivateSiswa(user_id, siswa_id string, timestamp time.Time) error
+	DeactivateSiswa(user_id, siswa_id string, timestamp time.Time) error
+
+	GetUserID(siswa_id string) (string, error)
 	GetKelasID(kelas string) (string, error)
 	CekNIS(nim int) (string, error)
 	CekSiswaExistByID(siswa_id string) (bool, error)
