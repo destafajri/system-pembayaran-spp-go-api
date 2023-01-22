@@ -11,6 +11,7 @@ type SiswaRepository interface {
 
 	GetListSiswaForAdmin(meta *meta.Metadata) ([]model.GetListSiswaResponse, int, error)
 	GetListSiswaNonAdmin(meta *meta.Metadata) ([]model.GetListSiswaResponse, int, error)
+	GetListSiswaByKelas(kelas_id string, meta *meta.Metadata) ([]model.GetListSiswaByKelasResponse, int, error)
 
 	GetKelasID(kelas string) (string, error)
 	CekNIS(nim int) (string, error)

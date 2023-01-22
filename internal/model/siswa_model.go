@@ -47,6 +47,20 @@ type GetListSiswaResponse struct {
 	entity.Timestamp
 }
 
+type GetListSiswaByKelasResponse struct {
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
+	NIS      int    `json:"nis"`
+	Nama     string `json:"nama"`
+	Kelas    string `json:"kelas"`
+	Angkatan string `json:"angkatan"`
+	IsActive bool   `json:"is_active"`
+	entity.Timestamp
+}
+
 // validation
 func ValidateCreateSiswaInput(request *CreateSiswaRequest) error {
 	err := validation.ValidateStruct(request,
