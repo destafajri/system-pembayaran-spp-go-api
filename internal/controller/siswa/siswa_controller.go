@@ -123,3 +123,28 @@ func (controller *SiswaController) GetListSiswaByKelas(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *SiswaController) GetDetailSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+	)
+
+	response, err := controller.siswaService.GetDetailSiswa(claim.Role, siswa_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Siswa Success",
+		Data:    response,
+	})
+}

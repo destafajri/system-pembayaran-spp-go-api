@@ -11,4 +11,5 @@ type SiswaService interface {
 	CreateSiswa(request *model.CreateSiswaRequest, timestamp time.Time) (*model.CreateSiswaResponse, error)
 	GetListSiswa(role string, meta *meta.Metadata) ([]model.GetListSiswaResponse, int, error)
 	GetListSiswaByKelas(kelas_id string, meta *meta.Metadata) ([]model.GetListSiswaByKelasResponse, int, error)
+	GetDetailSiswa(role, siswa_id string) (*model.GetDetailSiswaResponse, error)
 }
