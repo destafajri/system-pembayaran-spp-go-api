@@ -216,3 +216,37 @@ func (controller *SiswaController) DeactivateSiswa(c *fiber.Ctx) error {
 		Message: "Deactivate Siswa Success",
 	})
 }
+
+func (controller *SiswaController) DeleteSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.DeleteSiswa(siswa_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Delete Siswa Success",
+	})
+}

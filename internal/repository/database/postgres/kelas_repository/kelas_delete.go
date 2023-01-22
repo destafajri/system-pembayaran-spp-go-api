@@ -7,7 +7,7 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 )
 
-func (user *kelasImplementation) DeleteKelas(kelas_id string) error {
+func (kelas *kelasImplementation) DeleteKelas(kelas_id string) error {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -18,7 +18,7 @@ func (user *kelasImplementation) DeleteKelas(kelas_id string) error {
 		kelas_id,
 	}
 
-	_, err := user.db.Exec(query, values...)
+	_, err := kelas.db.Exec(query, values...)
 	if err != nil {
 		log.Println(err)
 		return errors.New("error delete kelas")

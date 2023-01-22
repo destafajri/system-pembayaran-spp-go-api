@@ -14,4 +14,5 @@ type SiswaService interface {
 	GetDetailSiswa(role, siswa_id string) (*model.GetDetailSiswaResponse, error)
 	ActivateSiswa(siswa_id string, timestamp time.Time) error
 	DeactivateSiswa(siswa_id string, timestamp time.Time) error
+	DeleteSiswa(siswa_id string) error
 }

@@ -20,6 +20,8 @@ type SiswaRepository interface {
 	ActivateSiswa(user_id, siswa_id string, timestamp time.Time) error
 	DeactivateSiswa(user_id, siswa_id string, timestamp time.Time) error
 
+	DeleteSiswa(user_id, siswa_id string) error
+
 	GetUserID(siswa_id string) (string, error)
 	GetKelasID(kelas string) (string, error)
 	CekNIS(nim int) (string, error)
