@@ -7,6 +7,7 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
+	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/responses"
 	"github.com/gofiber/fiber/v2"
 )
@@ -61,5 +62,191 @@ func (controller *SiswaController) CreateSiswa(c *fiber.Ctx) error {
 		Status:  "SUCCESS",
 		Message: "Create Siswa Success",
 		Data:    response,
+	})
+}
+
+func (controller *SiswaController) GetListSiswa(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+	)
+
+	response, total, err := controller.siswaService.GetListSiswa(claim.Role, &metadata)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	metadata.Total = total
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List Siswa Success",
+		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *SiswaController) GetListSiswaByKelas(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+		kelas_id = c.Params("kelas_id")
+		_, err   = jwts.JWTAuthorizationHeader(c)
+	)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	response, total, err := controller.siswaService.GetListSiswaByKelas(kelas_id, &metadata)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	metadata.Total = total
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List Siswa By Kelas Success",
+		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *SiswaController) GetDetailSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+	)
+
+	response, err := controller.siswaService.GetDetailSiswa(claim.Role, siswa_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Siswa Success",
+		Data:    response,
+	})
+}
+
+func (controller *SiswaController) ActivateSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.ActivateSiswa(siswa_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Activate Siswa Success",
+	})
+}
+
+func (controller *SiswaController) DeactivateSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.DeactivateSiswa(siswa_id, time.Now())
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Deactivate Siswa Success",
+	})
+}
+
+func (controller *SiswaController) DeleteSiswa(c *fiber.Ctx) error {
+	var (
+		siswa_id  = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnauthorized,
+			Status:  "Error",
+			Message: "unauthorized",
+			Error:   "unauthorized as admin",
+		})
+	}
+
+	err := controller.siswaService.DeleteSiswa(siswa_id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
+			Code:    fiber.StatusUnprocessableEntity,
+			Status:  "errors",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Delete Siswa Success",
 	})
 }
