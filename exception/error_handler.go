@@ -12,7 +12,7 @@ type Error string
 const (
 	ErrPermissionNotAllowed = Error("permission not allowed")
 	ErrUnauthorized         = Error("you're unauthorized")
-	ErrNotFound             = Error("user not found")
+	ErrNotFound             = Error("not found")
 	ErrInternal             = Error("internal server error")
 	ErrBadRequest           = Error("bad request")
 )
