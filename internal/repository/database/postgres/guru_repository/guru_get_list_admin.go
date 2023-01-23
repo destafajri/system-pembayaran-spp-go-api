@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta/param"
@@ -18,7 +19,8 @@ func (guru *guruImplementation) GetListGuruAdmin(meta *meta.Metadata) ([]model.G
 
 	q, err := param.FromMetadata(meta, guru)
 	if err != nil {
-		return nil, 0, errors.Wrap(err, "parsing metadata into query")
+		log.Println(err)
+		return nil, 0, errors.New("parsing metadata into query")
 	}
 
 	var (
@@ -31,13 +33,13 @@ func (guru *guruImplementation) GetListGuruAdmin(meta *meta.Metadata) ([]model.G
 	statement, params, err := guru.getlistForAdminQuery(notCount, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get guru from database")
+		return nil, 0, errors.New("build statement query to get guru from database")
 	}
 
 	rows, err := guru.db.Query(statement, params...)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, err
+		return nil, 0, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -52,7 +54,7 @@ func (guru *guruImplementation) GetListGuruAdmin(meta *meta.Metadata) ([]model.G
 
 		if err := json.Unmarshal(bson, &row); err != nil {
 			log.Println(err)
-			return nil, 0, errors.Wrap(err, "unmarshalling guru bson")
+			return nil, 0, errors.New("unmarshalling guru bson")
 		}
 
 		data = append(data, row)
@@ -62,13 +64,13 @@ func (guru *guruImplementation) GetListGuruAdmin(meta *meta.Metadata) ([]model.G
 	statement, params, err = guru.getlistForAdminQuery(count, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get guru from database")
+		return nil, 0, errors.New("build statement query to get guru from database")
 	}
 
 	row := guru.db.QueryRow(statement, params...)
 	if err := row.Scan(&total); err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "getting count guru")
+		return nil, 0, errors.New("getting count guru")
 	}
 
 	return data, total, nil

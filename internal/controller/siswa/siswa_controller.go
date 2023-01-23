@@ -1,9 +1,9 @@
 package siswa
 
 import (
-	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
@@ -29,32 +29,17 @@ func (controller *SiswaController) CreateSiswa(c *fiber.Ctx) error {
 	// claims to check role
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := c.BodyParser(&request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	response, err := controller.siswaService.CreateSiswa(&request, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
@@ -74,12 +59,7 @@ func (controller *SiswaController) GetListSiswa(c *fiber.Ctx) error {
 
 	response, total, err := controller.siswaService.GetListSiswa(claim.Role, &metadata)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	metadata.Total = total
@@ -100,18 +80,12 @@ func (controller *SiswaController) GetListSiswaByKelas(c *fiber.Ctx) error {
 	)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	response, total, err := controller.siswaService.GetListSiswaByKelas(kelas_id, &metadata)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	metadata.Total = total
@@ -126,19 +100,14 @@ func (controller *SiswaController) GetListSiswaByKelas(c *fiber.Ctx) error {
 
 func (controller *SiswaController) GetDetailSiswa(c *fiber.Ctx) error {
 	var (
-		siswa_id  = c.Params("siswa_id")
+		siswa_id = c.Params("siswa_id")
 		token, _ = jwts.JWTAuthorizationHeader(c)
 		claim, _ = jwts.GetClaims(token)
 	)
 
 	response, err := controller.siswaService.GetDetailSiswa(claim.Role, siswa_id)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -151,29 +120,19 @@ func (controller *SiswaController) GetDetailSiswa(c *fiber.Ctx) error {
 
 func (controller *SiswaController) ActivateSiswa(c *fiber.Ctx) error {
 	var (
-		siswa_id  = c.Params("siswa_id")
+		siswa_id = c.Params("siswa_id")
 		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.siswaService.ActivateSiswa(siswa_id, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -185,29 +144,19 @@ func (controller *SiswaController) ActivateSiswa(c *fiber.Ctx) error {
 
 func (controller *SiswaController) DeactivateSiswa(c *fiber.Ctx) error {
 	var (
-		siswa_id  = c.Params("siswa_id")
+		siswa_id = c.Params("siswa_id")
 		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.siswaService.DeactivateSiswa(siswa_id, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -219,29 +168,19 @@ func (controller *SiswaController) DeactivateSiswa(c *fiber.Ctx) error {
 
 func (controller *SiswaController) DeleteSiswa(c *fiber.Ctx) error {
 	var (
-		siswa_id  = c.Params("siswa_id")
+		siswa_id = c.Params("siswa_id")
 		token, _ = jwts.JWTAuthorizationHeader(c)
 	)
 
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.siswaService.DeleteSiswa(siswa_id)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{

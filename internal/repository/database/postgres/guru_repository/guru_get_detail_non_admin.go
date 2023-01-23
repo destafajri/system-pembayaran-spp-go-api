@@ -2,8 +2,10 @@ package guru_repository
 
 import (
 	"encoding/json"
+	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
@@ -17,12 +19,14 @@ func (guru *guruImplementation) GetDetailGuruNonAdmin(guru_id string) (*model.Ge
 
 	statement, params, err := guru.getDetailForNonAdminQuery(guru_id)
 	if err != nil {
-		return nil, errors.Wrap(err, "build statement query to get guru detail from database")
+		log.Println(err)
+		return nil, errors.New("build statement query to get guru detail from database")
 	}
 
 	rows, err := guru.db.Query(statement, params...)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -30,10 +34,12 @@ func (guru *guruImplementation) GetDetailGuruNonAdmin(guru_id string) (*model.Ge
 		var bson []byte
 
 		if err := rows.Scan(&bson); err != nil {
-			return nil, errors.Wrap(err, "scanning guru from database")
+			log.Println(err)
+			return nil, errors.New("scanning guru from database")
 		}
 		if err := json.Unmarshal(bson, &data); err != nil {
-			return nil, errors.Wrap(err, "unmarshalling guru bson")
+			log.Println(err)
+			return nil, errors.New("unmarshalling guru bson")
 		}
 	}
 

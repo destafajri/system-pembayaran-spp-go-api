@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta/param"
@@ -18,7 +19,8 @@ func (siswa *siswaImplementation) GetListSiswaByKelas(kelas_id string, meta *met
 
 	q, err := param.FromMetadata(meta, siswa)
 	if err != nil {
-		return nil, 0, errors.Wrap(err, "parsing metadata into query")
+		log.Println(err)
+		return nil, 0, errors.New("parsing metadata into query")
 	}
 
 	var (
@@ -31,13 +33,13 @@ func (siswa *siswaImplementation) GetListSiswaByKelas(kelas_id string, meta *met
 	statement, params, err := siswa.getlistByKelasQuery(kelas_id, notCount, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get siswa by kelas from database")
+		return nil, 0, errors.New("build statement query to get siswa by kelas from database")
 	}
 
 	rows, err := siswa.db.Query(statement, params...)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, err
+		return nil, 0, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -52,7 +54,7 @@ func (siswa *siswaImplementation) GetListSiswaByKelas(kelas_id string, meta *met
 
 		if err := json.Unmarshal(bson, &row); err != nil {
 			log.Println(err)
-			return nil, 0, errors.Wrap(err, "unmarshalling siswa bson")
+			return nil, 0, errors.New("unmarshalling siswa bson")
 		}
 
 		data = append(data, row)
@@ -62,13 +64,13 @@ func (siswa *siswaImplementation) GetListSiswaByKelas(kelas_id string, meta *met
 	statement, params, err = siswa.getlistByKelasQuery(kelas_id, count, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get siswa by kelas from database")
+		return nil, 0, errors.New("build statement query to get siswa by kelas from database")
 	}
 
 	row := siswa.db.QueryRow(statement, params...)
 	if err := row.Scan(&total); err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "getting count siswa")
+		return nil, 0, errors.New("getting count siswa")
 	}
 
 	return data, total, nil

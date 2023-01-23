@@ -1,9 +1,9 @@
 package user
 
 import (
-	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
@@ -25,22 +25,12 @@ func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 
 	err := c.BodyParser(&request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	response, err := controller.userService.CreateAdmin(&request, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
@@ -56,26 +46,15 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 
 	err := c.BodyParser(&request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	response, err := controller.userService.Login(&request)
 	if err != nil {
-		if err.Error() == "unauthorized" {
-			log.Println(err)
-			return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-				Code:    fiber.StatusUnauthorized,
-				Status:  "errors",
-				Message: err.Error(),
-			})
+		if err.Error() == exception.ErrUnauthorized.Error() {
+			return exception.ErrUnauthorized
 		}
 
-		log.Println(err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
 			Code:    fiber.StatusUnprocessableEntity,
 			Status:  "errors",
@@ -100,22 +79,12 @@ func (controller *UserController) GetListUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	response, total, err := controller.userService.GetListUser(&metadata)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	metadata.Total = total
@@ -137,22 +106,12 @@ func (controller *UserController) GetDetailUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	response, err := controller.userService.GetDetailUser(user_id)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -172,22 +131,12 @@ func (controller *UserController) ActivateUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.userService.ActivateUser(user_id, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -206,22 +155,12 @@ func (controller *UserController) DeactivateUser(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.userService.DeactivateUser(user_id, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{

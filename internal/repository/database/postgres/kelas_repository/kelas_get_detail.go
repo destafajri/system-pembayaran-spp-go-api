@@ -2,8 +2,10 @@ package kelas_repository
 
 import (
 	"encoding/json"
+	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
@@ -17,12 +19,14 @@ func (kelas *kelasImplementation) GetDetailKelas(kelas_id string) (*model.GetDet
 
 	statement, params, err := kelas.getDetailQuery(kelas_id)
 	if err != nil {
-		return nil, errors.Wrap(err, "build statement query to get kelas detail from database")
+		log.Println(err)
+		return nil, errors.New("build statement query to get kelas detail from database")
 	}
 
 	rows, err := kelas.db.Query(statement, params...)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -30,10 +34,12 @@ func (kelas *kelasImplementation) GetDetailKelas(kelas_id string) (*model.GetDet
 		var bson []byte
 
 		if err := rows.Scan(&bson); err != nil {
-			return nil, errors.Wrap(err, "scanning kelas from database")
+			log.Println(err)
+			return nil, errors.New("scanning kelas from database")
 		}
 		if err := json.Unmarshal(bson, &data); err != nil {
-			return nil, errors.Wrap(err, "unmarshalling kelas bson")
+			log.Println(err)
+			return nil, errors.New("unmarshalling kelas bson")
 		}
 	}
 

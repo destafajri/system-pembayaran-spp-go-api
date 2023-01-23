@@ -1,9 +1,9 @@
 package kelas
 
 import (
-	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
@@ -29,32 +29,17 @@ func (controller *KelasController) CreateKelas(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := c.BodyParser(&request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	response, err := controller.kelasService.CreateKelas(&request, time.Now())
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(responses.WebResponse{
@@ -72,18 +57,12 @@ func (controller *KelasController) GetListKelas(c *fiber.Ctx) error {
 	)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	response, total, err := controller.kelasService.GetListKelas(&metadata)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	metadata.Total = total
@@ -103,18 +82,12 @@ func (controller *KelasController) GetDetailKelas(c *fiber.Ctx) error {
 	)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	response, err := controller.kelasService.GetDetailKelas(kelas_id)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -135,32 +108,17 @@ func (controller *KelasController) UpdateDetailKelas(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := c.BodyParser(&request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	resp, err := controller.kelasService.UpdateDetailKelas(kelas_id, &request)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
@@ -180,22 +138,12 @@ func (controller *KelasController) DeleteKelas(c *fiber.Ctx) error {
 	// claims
 	claim, _ := jwts.GetClaims(token)
 	if claim.Role != "admin" {
-		return c.Status(fiber.StatusUnauthorized).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnauthorized,
-			Status:  "Error",
-			Message: "unauthorized",
-			Error:   "unauthorized as admin",
-		})
+		return exception.ErrPermissionNotAllowed
 	}
 
 	err := controller.kelasService.DeleteKelas(kelas_id)
 	if err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(responses.WebResponse{
-			Code:    fiber.StatusUnprocessableEntity,
-			Status:  "errors",
-			Message: err.Error(),
-		})
+		return exception.ErrorHandler(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{

@@ -7,6 +7,7 @@ import (
 	"github.com/nullism/bqb"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta/param"
@@ -19,7 +20,8 @@ func (user *userImplementation) GetListUser(meta *meta.Metadata) ([]model.GetLis
 
 	q, err := param.FromMetadata(meta, user)
 	if err != nil {
-		return nil, 0, errors.Wrap(err, "parsing metadata into query")
+		log.Println(err)
+		return nil, 0, errors.New("parsing metadata into query")
 	}
 
 	var (
@@ -32,13 +34,13 @@ func (user *userImplementation) GetListUser(meta *meta.Metadata) ([]model.GetLis
 	statement, params, err := user.getlistQuery(notCount, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get user from database")
+		return nil, 0, errors.New("build statement query to get user from database")
 	}
 
 	rows, err := user.db.Query(statement, params...)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, err
+		return nil, 0, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -53,7 +55,7 @@ func (user *userImplementation) GetListUser(meta *meta.Metadata) ([]model.GetLis
 
 		if err := json.Unmarshal(bson, &row); err != nil {
 			log.Println(err)
-			return nil, 0, errors.Wrap(err, "unmarshalling user bson")
+			return nil, 0, errors.New("unmarshalling user bson")
 		}
 
 		data = append(data, row)
@@ -63,13 +65,13 @@ func (user *userImplementation) GetListUser(meta *meta.Metadata) ([]model.GetLis
 	statement, params, err = user.getlistQuery(count, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "build statement query to get user from database")
+		return nil, 0, errors.New("build statement query to get user from database")
 	}
 
 	row := user.db.QueryRow(statement, params...)
 	if err := row.Scan(&total); err != nil {
 		log.Println(err)
-		return nil, 0, errors.Wrap(err, "getting count user")
+		return nil, 0, errors.New("getting count user")
 	}
 
 	return data, total, nil

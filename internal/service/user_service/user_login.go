@@ -1,9 +1,9 @@
 package user_service
 
 import (
-	"errors"
 	"log"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
@@ -16,7 +16,7 @@ func (user *userServiceimpl) Login(request *model.LoginRequest) (*model.LoginRes
 	}
 
 	if userInfo.Password != request.Password {
-		return nil, errors.New("unauthorized")
+		return nil, exception.ErrUnauthorized
 	}
 
 	//Generate JWT
