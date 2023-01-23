@@ -2,8 +2,10 @@ package siswa_repository
 
 import (
 	"encoding/json"
+	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
@@ -17,12 +19,14 @@ func (siswa *siswaImplementation) GetDetailSiswaForAdmin(id string) (*model.GetD
 
 	statement, params, err := siswa.getDetailAdminQuery(id)
 	if err != nil {
-		return nil, errors.Wrap(err, "build statement query to get siswa detail from database")
+		log.Println(err)
+		return nil, errors.New("build statement query to get siswa detail from database")
 	}
 
 	rows, err := siswa.db.Query(statement, params...)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -30,10 +34,12 @@ func (siswa *siswaImplementation) GetDetailSiswaForAdmin(id string) (*model.GetD
 		var bson []byte
 
 		if err := rows.Scan(&bson); err != nil {
-			return nil, errors.Wrap(err, "scanning siswa from database")
+			log.Println(err)
+			return nil, errors.New("scanning siswa from database")
 		}
 		if err := json.Unmarshal(bson, &data); err != nil {
-			return nil, errors.Wrap(err, "unmarshalling siswa bson")
+			log.Println(err)
+			return nil, errors.New("unmarshalling siswa bson")
 		}
 	}
 

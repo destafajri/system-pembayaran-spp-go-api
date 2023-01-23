@@ -14,6 +14,7 @@ func (guru *guruServiceimpl) CreateGuru(request *model.CreateGuruRequest, timest
 	// validation input
 	err := model.ValidateCreateGuruInput(request)
 	if err != nil {
+		log.Println()
 		return nil, err
 	}
 

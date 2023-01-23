@@ -2,11 +2,13 @@ package user_repository
 
 import (
 	"encoding/json"
+	"log"
 
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
+	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
 )
 
@@ -18,12 +20,14 @@ func (user *userImplementation) GetDetailUser(id string) (*model.GetDetailUser, 
 
 	statement, params, err := user.getDetailQuery(id)
 	if err != nil {
-		return nil, errors.Wrap(err, "build statement query to get user detail from database")
+		log.Println(err)
+		return nil, errors.New("build statement query to get user detail from database")
 	}
 
 	rows, err := user.db.Query(statement, params...)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, exception.ErrInternal
 	}
 	defer rows.Close()
 
@@ -31,10 +35,12 @@ func (user *userImplementation) GetDetailUser(id string) (*model.GetDetailUser, 
 		var bson []byte
 
 		if err := rows.Scan(&bson); err != nil {
-			return nil, errors.Wrap(err, "scanning user from database")
+			log.Println(err)
+			return nil, errors.New("scanning user from database")
 		}
 		if err := json.Unmarshal(bson, &data); err != nil {
-			return nil, errors.Wrap(err, "unmarshalling user bson")
+			log.Println(err)
+			return nil, errors.New("unmarshalling user bson")
 		}
 	}
 
