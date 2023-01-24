@@ -38,7 +38,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 		log.Println(err)
 		return ctx.Status(fiber.StatusForbidden).JSON(responses.WebResponse{
 			Code:    fiber.StatusForbidden,
-			Status:  "Permission",
+			Status:  "Error Permission",
 			Message: err.Error(),
 		})
 	}
