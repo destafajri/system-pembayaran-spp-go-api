@@ -6,12 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (siswa *userImplementation) GetSiswaID(user_id string) (string, error) {
+func (user *userImplementation) GetSiswaID(user_id string) (string, error) {
 	var siswa_id string
 
-	query := `SELECT id from siswa WHERE user_id = $1 LIMIT 1`
+	query := `SELECT id FROM siswa WHERE user_id = $1`
 
-	rows := siswa.db.QueryRow(query, siswa_id)
+	rows := user.db.QueryRow(query, user_id)
 	if err := rows.Scan(&siswa_id); err != nil {
 		log.Println(err)
 		return "", errors.New("siswa not found")

@@ -6,12 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (guru *userImplementation) GetGuruID(user_id string) (string, error) {
+func (user *userImplementation) GetGuruID(user_id string) (string, error) {
 	var guru_id string
 
-	query := `SELECT id from guru WHERE user_id = $1 LIMIT 1`
+	query := `SELECT id FROM guru WHERE user_id = $1`
 
-	rows := guru.db.QueryRow(query, guru_id)
+	rows := user.db.QueryRow(query, user_id)
 	if err := rows.Scan(&guru_id); err != nil {
 		log.Println(err)
 		return "", errors.New("guru not found")
