@@ -10,7 +10,7 @@ type siswaImplementation struct {
 	db *sql.DB
 }
 
-func NewSiswaRepository(db *sql.DB) repository.SiswaRepository{
+func NewSiswaRepository(db *sql.DB) repository.SiswaRepository {
 	return &siswaImplementation{
 		db: db,
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	IDRRegex = `^IDR [0-9]+(\\.[0][0])?$` // IDR 1000.00
+	IDRRegex = `^IDR [0-9]` // IDR 1000
 	USDRegex = `^USD [0-9]+(\\.[0][0])?$` // USD 5000.00
 )
 
@@ -15,7 +15,7 @@ func IDRValidation(input string) (bool, error) {
 	err := validation.Validate(input,
 		validation.Required.Error("is required"),
 		validation.Match(regexp.MustCompile(IDRRegex)).
-			Error("must be IDR format example IDR 1000.00"),
+			Error("must be IDR format example IDR 1000"),
 	)
 
 	if err != nil {

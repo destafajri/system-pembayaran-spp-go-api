@@ -1,4 +1,4 @@
-package guru_repository
+package spp_repository
 
 import (
 	"database/sql"
@@ -6,17 +6,17 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/repository"
 )
 
-type guruImplementation struct {
+type sppImplementation struct {
 	db *sql.DB
 }
 
-func NewGuruRepository(db *sql.DB) repository.GuruRepository {
-	return &guruImplementation{
+func NewSppRepository(db *sql.DB) repository.SppRepository {
+	return &sppImplementation{
 		db: db,
 	}
 }
 
-func (guru *guruImplementation) Sortable(field string) bool {
+func (spp *sppImplementation) Sortable(field string) bool {
 	switch field {
 	case "created_at", "updated_at":
 		return true
