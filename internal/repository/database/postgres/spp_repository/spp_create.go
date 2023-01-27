@@ -43,13 +43,13 @@ func (spp *sppImplementation) CreateSpp(request *entity.SppEntity) (*model.Creat
 	}
 
 	resp := model.CreateSppResponse{
-		ID: request.ID,
-		SiswaID: request.SiswaID,
+		ID:         request.ID,
+		SiswaID:    request.SiswaID,
 		JatuhTempo: request.JatuhTempo,
-		Jumlah: request.Jumlah,
-		Status: "unpaid",
-		IsActive: request.IsActive,
-		Timestamp: request.Timestamp,
+		Jumlah:     request.Jumlah,
+		Status:     "unpaid",
+		IsActive:   request.IsActive,
+		Timestamp:  request.Timestamp,
 	}
 
 	return &resp, nil
