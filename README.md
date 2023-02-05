@@ -21,6 +21,10 @@ docker-compose up -d
 ```
 - add .env file to setup your database connection and configuration
 - `migrator tools` from [golang migrate](https://github.com/golang-migrate/migrate)
+- to install the migration tools, you can type
+```
+go install -tags 'postgres,mysql,mongodb’ github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
 - to create, drop, and alter table migration you can read this [link](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
 - to run your database schema
 ```

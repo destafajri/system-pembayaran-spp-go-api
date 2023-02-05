@@ -25,6 +25,18 @@ type CreateSppResponse struct {
 	entity.Timestamp
 }
 
+type GetListSppResponse struct {
+	ID           string `json:"id"`
+	Siswa_id     string `json:"siswa_id"`
+	NIS          int    `json:"nis"`
+	NoSpp        string `json:"no_spp"`
+	JatuhTempo   string `json:"jatuh_tempo"`
+	Jumlah       string `json:"jumlah"`
+	TanggalBayar string `json:"tanggal_bayar"`
+	Status       string `json:"status"`
+	entity.Timestamp
+}
+
 // validation
 func ValidateCreateSppInput(request *CreateSppRequest) error {
 	err := validation.ValidateStruct(request,

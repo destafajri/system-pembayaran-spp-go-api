@@ -24,7 +24,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - data:/var/lib/postgresql/data
+      - postgres_db_data:/var/lib/postgresql/data
   golang-mongo:
     container_name: golang-mongo
     image: mongo:4.4
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - mysql
+      - postgres
     env_file:
       - .env
     networks:
@@ -48,5 +48,5 @@ services:
 volumes:
   mysql_db_data:
     name: mysql_db_data
-  data:
-    name: data
+  postgres_db_data:
+    name: postgres_db_data

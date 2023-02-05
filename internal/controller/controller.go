@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/controller/guru"
@@ -64,6 +66,7 @@ func Controller() {
 	sppController.Route(api)
 
 	// Start App
-	err := app.Listen(configuration.Get("PORT"))
+	port := fmt.Sprintf("0.0.0.0:%s", configuration.Get("PORT"))
+	err := app.Listen(port)
 	exception.PanicIfNeeded(err)
 }
