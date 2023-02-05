@@ -112,13 +112,13 @@ func (spp *sppImplementation) getlistSppForAdminQuery(is_count bool, q *param.Qu
 											END)),
 						  'status', ((CASE
 										WHEN ((
-										SELECT
-											bayar.spp_id
-										FROM
-											bayar
-										WHERE spp_id = spp.id
-										) IS NOT NULL )
-										THEN 'paid'
+											SELECT
+												bayar.spp_id
+											FROM
+												bayar
+											WHERE spp_id = spp.id
+											) IS NOT NULL )
+											THEN 'paid'
 										ELSE 'unpaid'
 									END)),
 						'created_at', created_at::timestamptz,
