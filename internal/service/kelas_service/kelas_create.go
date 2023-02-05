@@ -2,6 +2,7 @@ package kelas_service
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
@@ -31,7 +32,7 @@ func (kelas *kelasServiceimpl) CreateKelas(request *model.CreateKelasRequest, ti
 	input := entity.KelasEntity{
 		ID:        uuid.New().String(),
 		GuruID:    request.GuruID,
-		Kelas:     request.Kelas,
+		Kelas:     strings.ToUpper(request.Kelas),
 		Timestamp: t,
 	}
 
