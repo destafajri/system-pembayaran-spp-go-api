@@ -55,6 +55,7 @@ func (controller *SppController) GetListSppAdmin(c *fiber.Ctx) error {
 		metadata = meta.MetadataFromURL(c)
 		token, _ = jwts.JWTAuthorizationHeader(c)
 		claim, _ = jwts.GetClaims(token)
+		kelasparam = c.Query("kelas")
 	)
 
 	// claims
@@ -62,7 +63,7 @@ func (controller *SppController) GetListSppAdmin(c *fiber.Ctx) error {
 		return exception.ErrPermissionNotAllowed
 	}
 
-	response, total, err := controller.sppService.GetListSpp(&metadata)
+	response, total, err := controller.sppService.GetListSpp(kelasparam, &metadata)
 	if err != nil {
 		return exception.ErrorHandler(c, err)
 	}

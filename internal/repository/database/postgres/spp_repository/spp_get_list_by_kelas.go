@@ -14,7 +14,7 @@ import (
 	"github.com/nullism/bqb"
 )
 
-func (spp *sppImplementation) GetListSppForAdmin(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
+func (spp *sppImplementation) GetListSppByKelas(kelas_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -31,10 +31,10 @@ func (spp *sppImplementation) GetListSppForAdmin(kelas string, meta *meta.Metada
 		data     []model.GetListSppResponse
 	)
 
-	statement, params, err := spp.getlistSppForAdminQuery(kelas, notCount, q)
+	statement, params, err := spp.getlistSppBykelasQuery(kelas_id, notCount, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.New("build statement query to get spp from database")
+		return nil, 0, errors.New("build statement query to get spp by kelas from database")
 	}
 
 	rows, err := spp.db.Query(statement, params...)
@@ -50,22 +50,22 @@ func (spp *sppImplementation) GetListSppForAdmin(kelas string, meta *meta.Metada
 
 		if err := rows.Scan(&bson); err != nil {
 			log.Println(err)
-			return nil, 0, errors.New("scanning spp from database")
+			return nil, 0, errors.New("scanning spp by kelas from database")
 		}
 
 		if err := json.Unmarshal(bson, &row); err != nil {
 			log.Println(err)
-			return nil, 0, errors.New("unmarshalling spp bson")
+			return nil, 0, errors.New("unmarshalling spp by kelas bson")
 		}
 
 		data = append(data, row)
 	}
 
 	// count total data
-	statement, params, err = spp.getlistSppForAdminQuery(kelas, count, q)
+	statement, params, err = spp.getlistSppBykelasQuery(kelas_id, count, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.New("build statement query to get spp from database")
+		return nil, 0, errors.New("build statement query to get spp by kelas from database")
 	}
 
 	row := spp.db.QueryRow(statement, params...)
@@ -77,7 +77,7 @@ func (spp *sppImplementation) GetListSppForAdmin(kelas string, meta *meta.Metada
 	return data, total, nil
 }
 
-func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count bool, q *param.Query) (string, []interface{}, error) {
+func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count bool, q *param.Query) (string, []interface{}, error) {
 	var selectx *bqb.Query
 
 	if is_count {
@@ -91,8 +91,6 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 			json_build_object(
 						'id', spp.id,
 						'siswa_id', siswa.id,
-						'nama', siswa.nama,
-						'kelas', kelas.kelas,
 						'nis', siswa.nis,
 						'no_spp', spp.no_spp,
 						'jatuh_tempo', spp.jatuh_tempo,
@@ -124,9 +122,9 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 											THEN 'paid'
 										ELSE 'unpaid'
 									END)),
-						'created_at', spp.created_at::timestamptz,
-						'updated_at', spp.updated_at::timestamptz,
-						'deleted_at', spp.deleted_at::timestamptz
+						'created_at', created_at::timestamptz,
+						'updated_at', updated_at::timestamptz,
+						'deleted_at', deleted_at::timestamptz
 			)
 		`)
 	}
@@ -138,17 +136,14 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 			siswa
 		ON
 			spp.siswa_id = siswa.id
-		JOIN
-			kelas
-		ON
-			siswa.kelas_id = kelas.id
-	`)
+		WHERE siswa.kelas_id = ?
+	`, kelas_id)
 
-	where := bqb.Optional("WHERE")
+
 	and := bqb.Optional("AND")
 
 	if q.Status != "%%" {
-		where.Space(`(CASE
+		and.Space(`(CASE
 			WHEN ((
 				SELECT
 					bayar.spp_id
@@ -161,21 +156,13 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 		END) = ?`, strings.ReplaceAll(q.Status, "%", ""))
 	}
 
-	if q.Status != "%%" && kelas != ""{
-		and.Space("kelas = ?", strings.ToUpper(kelas))
-	}
-
-	if q.Status == "" && kelas != ""{
-		where.Space("kelas = ?", strings.ToUpper(kelas))
-	}
-
 	if is_count {
-		return bqb.New("? ? ? ?", selectx, from, where, and).ToPgsql()
+		return bqb.New("? ? ?", selectx, from, and).ToPgsql()
 	}
 
 	order := bqb.Optional("ORDER BY")
 	if q.OrderBy != "" && q.OrderDirection != "" {
-		order.Space("spp.created_at").Space(q.OrderDirection)
+		order.Space("created_at").Space(q.OrderDirection)
 	}
 
 	limit := bqb.Optional("LIMIT")
@@ -188,8 +175,8 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 		offset.Space("?", q.Offset)
 	}
 
-	buildx := bqb.New("? ? ? ? ? ? ?", selectx, from, where, and, order, limit, offset)
-	buildx.Print()
+	buildx := bqb.New("? ? ? ? ? ?", selectx, from, and, order, limit, offset)
+	// buildx.Print()
 
 	return buildx.ToPgsql()
 }

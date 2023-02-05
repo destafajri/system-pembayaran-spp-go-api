@@ -7,8 +7,8 @@ import (
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 )
 
-func (spp *sppServiceimpl) GetListSpp(meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
-	resp, total, err := spp.sppRepository.GetListSppForAdmin(meta)
+func (spp *sppServiceimpl) GetListSpp(kelasparam string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
+	resp, total, err := spp.sppRepository.GetListSppForAdmin(kelasparam, meta)
 	if err != nil {
 		log.Println(err)
 		return nil, 0, err

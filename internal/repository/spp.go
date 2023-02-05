@@ -9,7 +9,7 @@ import (
 type SppRepository interface {
 	CreateSpp(request *entity.SppEntity) (*model.CreateSppResponse, error)
 
-	GetListSppForAdmin(meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetListSppForAdmin(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 
 	GetSiswaID(siswa_nis int) (string, error)
 }
