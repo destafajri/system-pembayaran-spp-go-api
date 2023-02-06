@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
@@ -21,7 +22,15 @@ func NewUserController(userService *service.UserService) UserController {
 }
 
 func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
-	var request model.CreateAdminRequest
+	var (
+		request       model.CreateAdminRequest
+		apiKey        = c.Get("API-KEY")
+		configuration = config.New()
+	)
+
+	if apiKey != configuration.Get("API-KEY") {
+		return exception.ErrUnauthorized
+	}
 
 	err := c.BodyParser(&request)
 	if err != nil {
