@@ -52,9 +52,9 @@ func (controller *SppController) CreateSpp(c *fiber.Ctx) error {
 
 func (controller *SppController) GetListSppAdmin(c *fiber.Ctx) error {
 	var (
-		metadata = meta.MetadataFromURL(c)
-		token, _ = jwts.JWTAuthorizationHeader(c)
-		claim, _ = jwts.GetClaims(token)
+		metadata   = meta.MetadataFromURL(c)
+		token, _   = jwts.JWTAuthorizationHeader(c)
+		claim, _   = jwts.GetClaims(token)
 		kelasparam = c.Query("kelas")
 	)
 
@@ -73,6 +73,61 @@ func (controller *SppController) GetListSppAdmin(c *fiber.Ctx) error {
 		Code:    fiber.StatusOK,
 		Status:  "SUCCESS",
 		Message: "Get List Spp Success",
+		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *SppController) GetListSppBySiswaForAdmin(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+		siswa_id = c.Params("siswa_id")
+	)
+
+	// claims
+	if claim.Role != "admin" && claim.Role != "guru" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	response, total, err := controller.sppService.GetListSppBySiswaForAdmin(siswa_id, &metadata)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	metadata.Total = total
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List Spp By Siswa Success",
+		Meta:    metadata,
+		Data:    response,
+	})
+}
+
+func (controller *SppController) GetListSppBySiswaForSiswa(c *fiber.Ctx) error {
+	var (
+		metadata = meta.MetadataFromURL(c)
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+	)
+
+	// claims
+	if claim.Role != "siswa" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	response, total, err := controller.sppService.GetListSppBySiswaForSiswa(claim.ID, &metadata)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	metadata.Total = total
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get List Spp By Siswa Success",
 		Meta:    metadata,
 		Data:    response,
 	})

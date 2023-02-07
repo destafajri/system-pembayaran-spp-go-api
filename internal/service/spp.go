@@ -10,4 +10,6 @@ import (
 type SppService interface {
 	CreateSpp(request *model.CreateSppRequest, timestamp time.Time) (*model.CreateSppResponse, error)
 	GetListSpp(kelasparam string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetListSppBySiswaForAdmin(siswa_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetListSppBySiswaForSiswa(user_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 }

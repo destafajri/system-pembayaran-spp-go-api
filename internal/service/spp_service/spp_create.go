@@ -28,7 +28,7 @@ func (spp *sppServiceimpl) CreateSpp(request *model.CreateSppRequest, timestamp 
 		return nil, err
 	}
 
-	user_id, err := spp.sppRepository.GetSiswaID(request.SiswaNIS)
+	user_id, err := spp.sppRepository.GetSiswaIDByNIS(request.SiswaNIS)
 	if err != nil {
 		return nil, err
 	}

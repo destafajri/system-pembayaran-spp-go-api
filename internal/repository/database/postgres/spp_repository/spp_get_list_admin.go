@@ -113,7 +113,7 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 															JOIN spp ON bayar.spp_id = spp.id)
 											ELSE null
 											END)),
-						  'status', ((CASE
+						'status', ((CASE
 										WHEN ((
 											SELECT
 												bayar.spp_id
@@ -189,7 +189,7 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 	}
 
 	buildx := bqb.New("? ? ? ? ? ? ?", selectx, from, where, and, order, limit, offset)
-	buildx.Print()
+	// buildx.Print()
 
 	return buildx.ToPgsql()
 }

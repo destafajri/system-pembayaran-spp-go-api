@@ -14,7 +14,7 @@ import (
 	"github.com/nullism/bqb"
 )
 
-func (spp *sppImplementation) GetListSppByKelas(kelas_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
+func (spp *sppImplementation) GetListSppBySiswa(siswa_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
@@ -31,10 +31,10 @@ func (spp *sppImplementation) GetListSppByKelas(kelas_id string, meta *meta.Meta
 		data     []model.GetListSppResponse
 	)
 
-	statement, params, err := spp.getlistSppBykelasQuery(kelas_id, notCount, q)
+	statement, params, err := spp.getlistSppBySiswaQuery(siswa_id, notCount, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.New("build statement query to get spp by kelas from database")
+		return nil, 0, errors.New("build statement query to get spp by siswa from database")
 	}
 
 	rows, err := spp.db.Query(statement, params...)
@@ -50,22 +50,22 @@ func (spp *sppImplementation) GetListSppByKelas(kelas_id string, meta *meta.Meta
 
 		if err := rows.Scan(&bson); err != nil {
 			log.Println(err)
-			return nil, 0, errors.New("scanning spp by kelas from database")
+			return nil, 0, errors.New("scanning spp by siswa from database")
 		}
 
 		if err := json.Unmarshal(bson, &row); err != nil {
 			log.Println(err)
-			return nil, 0, errors.New("unmarshalling spp by kelas bson")
+			return nil, 0, errors.New("unmarshalling spp by siswa bson")
 		}
 
 		data = append(data, row)
 	}
 
 	// count total data
-	statement, params, err = spp.getlistSppBykelasQuery(kelas_id, count, q)
+	statement, params, err = spp.getlistSppBySiswaQuery(siswa_id, count, q)
 	if err != nil {
 		log.Println(err)
-		return nil, 0, errors.New("build statement query to get spp by kelas from database")
+		return nil, 0, errors.New("build statement query to get spp by siswa from database")
 	}
 
 	row := spp.db.QueryRow(statement, params...)
@@ -77,7 +77,7 @@ func (spp *sppImplementation) GetListSppByKelas(kelas_id string, meta *meta.Meta
 	return data, total, nil
 }
 
-func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count bool, q *param.Query) (string, []interface{}, error) {
+func (spp *sppImplementation) getlistSppBySiswaQuery(siswa_id string, is_count bool, q *param.Query) (string, []interface{}, error) {
 	var selectx *bqb.Query
 
 	if is_count {
@@ -91,6 +91,8 @@ func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count b
 			json_build_object(
 						'id', spp.id,
 						'siswa_id', siswa.id,
+						'nama', siswa.nama,
+						'kelas', kelas.kelas,
 						'nis', siswa.nis,
 						'no_spp', spp.no_spp,
 						'jatuh_tempo', spp.jatuh_tempo,
@@ -111,7 +113,7 @@ func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count b
 															JOIN spp ON bayar.spp_id = spp.id)
 											ELSE null
 											END)),
-						  'status', ((CASE
+						'status', ((CASE
 										WHEN ((
 											SELECT
 												bayar.spp_id
@@ -122,9 +124,9 @@ func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count b
 											THEN 'paid'
 										ELSE 'unpaid'
 									END)),
-						'created_at', created_at::timestamptz,
-						'updated_at', updated_at::timestamptz,
-						'deleted_at', deleted_at::timestamptz
+						'created_at', spp.created_at::timestamptz,
+						'updated_at', spp.updated_at::timestamptz,
+						'deleted_at', spp.deleted_at::timestamptz
 			)
 		`)
 	}
@@ -136,9 +138,12 @@ func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count b
 			siswa
 		ON
 			spp.siswa_id = siswa.id
-		WHERE siswa.kelas_id = ?
-	`, kelas_id)
-
+		JOIN
+			kelas
+		ON
+			siswa.kelas_id = kelas.id
+		WHERE siswa.id = ?
+	`, siswa_id)
 
 	and := bqb.Optional("AND")
 
@@ -162,7 +167,7 @@ func (spp *sppImplementation) getlistSppBykelasQuery(kelas_id string, is_count b
 
 	order := bqb.Optional("ORDER BY")
 	if q.OrderBy != "" && q.OrderDirection != "" {
-		order.Space("created_at").Space(q.OrderDirection)
+		order.Space("spp.created_at").Space(q.OrderDirection)
 	}
 
 	limit := bqb.Optional("LIMIT")
