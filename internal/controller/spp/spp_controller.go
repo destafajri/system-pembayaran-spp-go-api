@@ -132,3 +132,53 @@ func (controller *SppController) GetListSppBySiswaForSiswa(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *SppController) GetDetailSppForAdmin(c *fiber.Ctx) error {
+	var (
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+		siswa_id = c.Params("spp_id")
+	)
+
+	// claims
+	if claim.Role != "admin" && claim.Role != "guru" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	response, err := controller.sppService.GetDetailSppForAdmin(siswa_id)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Spp Success",
+		Data:    response,
+	})
+}
+
+func (controller *SppController) GetDetailSppForSiswa(c *fiber.Ctx) error {
+	var (
+		token, _ = jwts.JWTAuthorizationHeader(c)
+		claim, _ = jwts.GetClaims(token)
+		spp_id   = c.Params("spp_id")
+	)
+
+	// claims
+	if claim.Role != "siswa" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	response, err := controller.sppService.GetDetailSppForSiswa(spp_id, claim.ID)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Get Detail Spp Success",
+		Data:    response,
+	})
+}

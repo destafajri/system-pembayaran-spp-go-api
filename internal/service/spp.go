@@ -12,4 +12,6 @@ type SppService interface {
 	GetListSpp(kelasparam string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 	GetListSppBySiswaForAdmin(siswa_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 	GetListSppBySiswaForSiswa(user_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetDetailSppForAdmin(spp_id string) (*model.GetDetailSppResponse, error)
+	GetDetailSppForSiswa(spp_id, user_id string) (*model.GetDetailSppResponse, error)
 }

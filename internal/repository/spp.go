@@ -9,9 +9,12 @@ import (
 type SppRepository interface {
 	CreateSpp(request *entity.SppEntity) (*model.CreateSppResponse, error)
 
-	GetListSppForAdmin(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetListSpp(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 	GetListSppBySiswa(siswa_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
+	GetDetailSpp(spp_id string) (*model.GetDetailSppResponse, error)
 
 	GetSiswaIDByNIS(siswa_nis int) (string, error)
 	GetSiswaIDByUserID(user_id string) (string, error)
+	CekSppExistByID(spp_id string) (bool, error)
+	CekSppByIDAndSiswaIDIsMatch(spp_id, siswa_id string) (bool, error)
 }

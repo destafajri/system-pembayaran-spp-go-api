@@ -14,7 +14,7 @@ import (
 	"github.com/nullism/bqb"
 )
 
-func (spp *sppImplementation) GetListSppForAdmin(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
+func (spp *sppImplementation) GetListSpp(kelas string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error) {
 	_, cancel := config.NewPostgresContext()
 	defer cancel()
 
