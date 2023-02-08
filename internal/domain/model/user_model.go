@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 

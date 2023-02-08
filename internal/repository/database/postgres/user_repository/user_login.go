@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
 )
 
 func (user *userImplementation) Login(username string) (*entity.UserEntity, error) {

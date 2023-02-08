@@ -9,7 +9,7 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 )
 
 func (user *userImplementation) GetDetailUser(id string) (*model.GetDetailUser, error) {

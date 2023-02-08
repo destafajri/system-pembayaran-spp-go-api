@@ -6,7 +6,7 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/nullism/bqb"
 	"github.com/pkg/errors"
 )

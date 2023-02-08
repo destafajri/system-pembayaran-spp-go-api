@@ -5,7 +5,7 @@ import (
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 )
 
 func (user *userServiceimpl) Login(request *model.LoginRequest) (*model.LoginResponse, error){

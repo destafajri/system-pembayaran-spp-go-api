@@ -3,8 +3,8 @@ package spp_service
 import (
 	"time"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
 	"github.com/google/uuid"
 )
