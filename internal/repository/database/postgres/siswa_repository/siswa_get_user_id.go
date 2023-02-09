@@ -3,10 +3,14 @@ package siswa_repository
 import (
 	"log"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 	"github.com/pkg/errors"
 )
 
 func (siswa *siswaImplementation) GetUserID(siswa_id string) (string, error) {
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+	
 	var user_id string
 
 	query := `SELECT user_id from siswa WHERE id = $1 LIMIT 1`

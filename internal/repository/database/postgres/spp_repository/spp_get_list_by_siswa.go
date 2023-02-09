@@ -142,7 +142,7 @@ func (spp *sppImplementation) getlistSppBySiswaQuery(siswa_id string, is_count b
 			kelas
 		ON
 			siswa.kelas_id = kelas.id
-		WHERE siswa.id = ?
+		WHERE siswa.id = ? AND spp.is_active is true
 	`, siswa_id)
 
 	and := bqb.Optional("AND")

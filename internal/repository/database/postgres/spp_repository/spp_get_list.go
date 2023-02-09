@@ -142,13 +142,26 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 			kelas
 		ON
 			siswa.kelas_id = kelas.id
+		WHERE
+			spp.is_active is true
 	`)
 
-	where := bqb.Optional("WHERE")
 	and := bqb.Optional("AND")
 
-	if q.Status != "%%" {
-		where.Space(`(CASE
+	if q.Status != "%%" && kelas != "" {
+		and.Space(`(CASE
+				WHEN ((
+					SELECT
+						bayar.spp_id
+					FROM
+						bayar
+					WHERE spp_id = spp.id
+					) IS NOT NULL )
+					THEN 'paid'
+				ELSE 'unpaid'
+		END) = ?`, strings.ReplaceAll(q.Status, "%", "")).Space("AND kelas = ?", strings.ToUpper(kelas))
+	} else if q.Status != "%%" {
+		and.Space(`(CASE
 			WHEN ((
 				SELECT
 					bayar.spp_id
@@ -159,18 +172,12 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 				THEN 'paid'
 			ELSE 'unpaid'
 		END) = ?`, strings.ReplaceAll(q.Status, "%", ""))
-	}
-
-	if q.Status != "%%" && kelas != ""{
+	} else if kelas != "" {
 		and.Space("kelas = ?", strings.ToUpper(kelas))
 	}
 
-	if q.Status == "" && kelas != ""{
-		where.Space("kelas = ?", strings.ToUpper(kelas))
-	}
-
 	if is_count {
-		return bqb.New("? ? ? ?", selectx, from, where, and).ToPgsql()
+		return bqb.New("? ? ?", selectx, from, and).ToPgsql()
 	}
 
 	order := bqb.Optional("ORDER BY")
@@ -188,7 +195,7 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 		offset.Space("?", q.Offset)
 	}
 
-	buildx := bqb.New("? ? ? ? ? ? ?", selectx, from, where, and, order, limit, offset)
+	buildx := bqb.New("? ? ? ? ? ?", selectx, from, and, order, limit, offset)
 	// buildx.Print()
 
 	return buildx.ToPgsql()

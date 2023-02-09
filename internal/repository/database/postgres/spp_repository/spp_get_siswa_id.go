@@ -3,9 +3,14 @@ package spp_repository
 import (
 	"errors"
 	"log"
+
+	"github.com/destafajri/system-pembayaran-spp-go-api/config"
 )
 
 func (spp *sppImplementation) GetSiswaIDByNIS(siswa_nis int) (string, error) {
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+	
 	var siswa_id string
 
 	query := `SELECT id FROM siswa WHERE nis = $1`
@@ -20,6 +25,9 @@ func (spp *sppImplementation) GetSiswaIDByNIS(siswa_nis int) (string, error) {
 }
 
 func (spp *sppImplementation) GetSiswaIDByUserID(user_id string) (string, error) {
+	_, cancel := config.NewPostgresContext()
+	defer cancel()
+	
 	var siswa_id string
 
 	query := `SELECT id FROM siswa WHERE user_id = $1`
