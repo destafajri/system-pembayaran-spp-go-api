@@ -110,7 +110,9 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 																tanggal_bayar
 															FROM
 																bayar
-															JOIN spp ON bayar.spp_id = spp.id)
+															JOIN spp ON bayar.spp_id = spp.id
+															LIMIT 1
+														)
 											ELSE null
 											END)),
 						'status', ((CASE
@@ -120,6 +122,7 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 											FROM
 												bayar
 											WHERE spp_id = spp.id
+											LIMIT 1
 											) IS NOT NULL )
 											THEN 'paid'
 										ELSE 'unpaid'
@@ -168,6 +171,7 @@ func (spp *sppImplementation) getlistSppForAdminQuery(kelas string, is_count boo
 				FROM
 					bayar
 				WHERE spp_id = spp.id
+				LIMIT 1
 				) IS NOT NULL )
 				THEN 'paid'
 			ELSE 'unpaid'

@@ -110,7 +110,9 @@ func (spp *sppImplementation) getlistSppBySiswaQuery(siswa_id string, is_count b
 																tanggal_bayar
 															FROM
 																bayar
-															JOIN spp ON bayar.spp_id = spp.id)
+															JOIN spp ON bayar.spp_id = spp.id
+															LIMIT 1
+														)
 											ELSE null
 											END)),
 						'status', ((CASE
@@ -120,6 +122,7 @@ func (spp *sppImplementation) getlistSppBySiswaQuery(siswa_id string, is_count b
 											FROM
 												bayar
 											WHERE spp_id = spp.id
+											LIMIT 1
 											) IS NOT NULL )
 											THEN 'paid'
 										ELSE 'unpaid'
@@ -155,6 +158,7 @@ func (spp *sppImplementation) getlistSppBySiswaQuery(siswa_id string, is_count b
 				FROM
 					bayar
 				WHERE spp_id = spp.id
+				LIMIT 1
 				) IS NOT NULL )
 				THEN 'paid'
 			ELSE 'unpaid'

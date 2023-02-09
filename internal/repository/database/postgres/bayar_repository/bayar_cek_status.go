@@ -20,6 +20,7 @@ func (bayar *bayarImplementation) GetStatusInfo(spp_id string) (string, error) {
 					FROM
 						bayar
 					WHERE spp_id = $1
+					LIMIT 1
 					) IS NOT NULL )
 					THEN 'paid'
 				ELSE 'unpaid'

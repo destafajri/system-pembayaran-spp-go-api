@@ -13,7 +13,7 @@ func (bayar *bayarImplementation) GetSiswaIDByNIS(siswa_nis int) (string, error)
 	
 	var siswa_id string
 
-	query := `SELECT id FROM siswa WHERE nis = $1`
+	query := `SELECT id FROM siswa WHERE nis = $1 LIMIT 1`
 
 	rows := bayar.db.QueryRow(query, siswa_nis)
 	if err := rows.Scan(&siswa_id); err != nil {

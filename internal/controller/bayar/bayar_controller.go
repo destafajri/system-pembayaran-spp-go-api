@@ -46,3 +46,33 @@ func (controller *BayarController) CallbackPaid(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *BayarController) RollbackUnPaid(c *fiber.Ctx) error {
+	var (
+		request  model.BayarSppRequest
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims to check role
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := c.BodyParser(&request)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	response, err := controller.bayarService.UnpaidSpp(&request)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Rollback Unpaid Spp Success",
+		Data:    response,
+	})
+}
