@@ -182,3 +182,51 @@ func (controller *SppController) GetDetailSppForSiswa(c *fiber.Ctx) error {
 		Data:    response,
 	})
 }
+
+func (controller *SppController) ActivateSpp(c *fiber.Ctx) error {
+	var (
+		spp_id   = c.Params("spp_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := controller.sppService.ActivateSpp(spp_id, time.Now())
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Activate Spp Success",
+	})
+}
+
+func (controller *SppController) DeactivateSpp(c *fiber.Ctx) error {
+	var (
+		spp_id   = c.Params("spp_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := controller.sppService.DeactivateSpp(spp_id, time.Now())
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Deactivate spp Success",
+	})
+}

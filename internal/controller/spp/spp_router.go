@@ -9,4 +9,6 @@ func (controller *SppController) Route(api fiber.Router) {
 	api.Get("/spp/list/siswa", controller.GetListSppBySiswaForSiswa)
 	api.Get("/spp/admin/detail/:spp_id", controller.GetDetailSppForAdmin)
 	api.Get("/spp/siswa/detail/:spp_id", controller.GetDetailSppForSiswa)
+	api.Put("/spp/admin/activate/:spp_id", controller.ActivateSpp)
+	api.Put("/spp/admin/deactivate/:spp_id", controller.DeactivateSpp)
 }

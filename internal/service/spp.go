@@ -14,4 +14,6 @@ type SppService interface {
 	GetListSppBySiswaForSiswa(user_id string, meta *meta.Metadata) ([]model.GetListSppResponse, int, error)
 	GetDetailSppForAdmin(spp_id string) (*model.GetDetailSppResponse, error)
 	GetDetailSppForSiswa(spp_id, user_id string) (*model.GetDetailSppResponse, error)
+	ActivateSpp(spp_id string, timestamp time.Time) error
+	DeactivateSpp(spp_id string, timestamp time.Time) error
 }
