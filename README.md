@@ -4,6 +4,7 @@ System Pembayaran SPP API
 
 - [API Documentation](https://whimsical.com/erd-table-api-map-Umr1mzU2SY3jAqJyDa7KMX)
 - [API Contract](https://www.notion.so/e785eb0dfdc245659df81b6e91bf40a5?v=2176e61ec8d744d4af0b35e613895ad9)
+- [Postman Collection](https://documenter.getpostman.com/view/22138766/2s935sohZ6)
 
 ## How to use
 - Please clone or download this repository.
@@ -11,6 +12,7 @@ System Pembayaran SPP API
 git clone https://github.com/destafajri/system-pembayaran-spp-go-api.git
 ```
 - Prepare postgres database, for this project i use [SUPABASE](https://supabase.com/)
+- add .env file to setup your database connection and configuration
 - if you want to use docker, you can type
 ```
 docker-compose up
@@ -19,7 +21,6 @@ OR
 ```
 docker-compose up -d
 ```
-- add .env file to setup your database connection and configuration
 - `migrator tools` from [golang migrate](https://github.com/golang-migrate/migrate)
 - to install the migration tools, you can type
 ```
