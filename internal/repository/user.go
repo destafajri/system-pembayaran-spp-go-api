@@ -3,8 +3,8 @@ package repository
 import (
 	"time"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
 )
 
@@ -21,7 +21,7 @@ type UserRepository interface {
 	DeactivateGuru(user_id, guru_id string, timestamp time.Time) error
 	ActivateSiswa(user_id, siswa_id string, timestamp time.Time) error
 	DeactivateSiswa(user_id, siswa_id string, timestamp time.Time) error
-	
+
 	CekUserExistByID(id string) (bool, error)
 	GetRoleInformation(id string) (string, error)
 	GetGuruID(user_id string) (string, error)

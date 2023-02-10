@@ -10,7 +10,7 @@ type kelasImplementation struct {
 	db *sql.DB
 }
 
-func NewkelasRepository(db *sql.DB) repository.KelasRepository{
+func NewkelasRepository(db *sql.DB) repository.KelasRepository {
 	return &kelasImplementation{
 		db: db,
 	}

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/google/uuid"
 )
 
