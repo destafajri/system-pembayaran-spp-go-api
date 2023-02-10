@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/entity"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
-	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validation"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
+	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
 	"github.com/google/uuid"
 )
 
@@ -54,14 +54,5 @@ func (user *userServiceimpl) CreateAdmin(request *model.CreateAdminRequest, time
 		return nil, err
 	}
 
-	resp := model.CreateAdminResponse{
-		ID:        users.ID,
-		Email:     users.Email,
-		Username:  users.Username,
-		Role:      users.Role,
-		IsActive:  users.IsActive,
-		Timestamp: users.Timestamp,
-	}
-
-	return &resp, nil
+	return users, nil
 }
