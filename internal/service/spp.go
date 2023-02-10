@@ -16,4 +16,5 @@ type SppService interface {
 	GetDetailSppForSiswa(spp_id, user_id string) (*model.GetDetailSppResponse, error)
 	ActivateSpp(spp_id string, timestamp time.Time) error
 	DeactivateSpp(spp_id string, timestamp time.Time) error
+	DeleteSpp(spp_id string) error
 }

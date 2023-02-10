@@ -230,3 +230,27 @@ func (controller *SppController) DeactivateSpp(c *fiber.Ctx) error {
 		Message: "Deactivate spp Success",
 	})
 }
+
+func (controller *SppController) DeleteSpp(c *fiber.Ctx) error {
+	var (
+		spp_id   = c.Params("spp_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := controller.sppService.DeleteSpp(spp_id)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Delete Spp Success",
+	})
+}
