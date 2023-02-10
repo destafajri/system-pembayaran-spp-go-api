@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/model"
-	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validation"
+	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
+	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
 )
 
 func (user *userServiceimpl) GetDetailUser(user_id string) (*model.GetDetailUser, error) {

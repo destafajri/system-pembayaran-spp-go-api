@@ -7,7 +7,10 @@ System Pembayaran SPP API
 
 ## How to use
 - Please clone or download this repository.
-- Prepare postgres database
+```
+git clone https://github.com/destafajri/system-pembayaran-spp-go-api.git
+```
+- Prepare postgres database, for this project i use [SUPABASE](https://supabase.com/)
 - if you want to use docker, you can type
 ```
 docker-compose up
@@ -16,33 +19,24 @@ OR
 ```
 docker-compose up -d
 ```
-- add .env file to setup your database connection
+- add .env file to setup your database connection and configuration
+- `migrator tools` from [golang migrate](https://github.com/golang-migrate/migrate)
+- to install the migration tools, you can type
 ```
-MONGO_URI=mongodb://mongo:mongo@localhost:27017
-MONGO_DATABASE=golang_test
-MONGO_POOL_MIN=10
-MONGO_POOL_MAX=100
-MONGO_MAX_IDLE_TIME_SECOND=60
-
-POSTGRES_URL="user=postgres password=[your-password] host=[your-host] port=5432 dbname=postgres"
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=[your-password]
-POSTGRES_HOST=[your-host]
-POSTGRES_PORT=5432
-POSTGRES_DB=postgres
-
-MYSQL_URL="root:secret@tcp(localhost:3306)/sample?parseTime=true"
-
-KEY_JWT="nafonFajriSecretKeyJWTdkdjfnfja"
+go install -tags 'postgres,mysql,mongodb’ github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 ```
-- `installing migrator tools` download from [golang migrate](https://github.com/golang-migrate/migrate) in release page
-- run
+- to create, drop, and alter table migration you can read this [link](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
+- to run your database schema
 ```
 make migrate-up
 ```
-- run the golang server
+- to run the golang server
 ```
 make run
+```
+or
+```
+go run main.go
 ```
 
 ## Framework
@@ -50,7 +44,7 @@ make run
 - Web : GoFiber
 - Validation : Go-Ozzo
 - Configuration : GoDotEnv
-- Database : MongoDB, Postgre(Supabase), MySQL
+- Database : Postgre(Supabase)
 
 ## Architecture
 
@@ -58,86 +52,51 @@ Controller -> Service -> Repository
 
 ## Project Structure example
     .
-    ├── Dockerfile
-    ├── LICENSE
-    ├── Makefile
-    ├── README.md
     ├── config
-    │   ├── config.go
-    │   ├── fiber.go
-    │   ├── mongo.go
-    │   ├── mysql.go
-    │   └── postgres.go
-    ├── docker-compose.yml
     ├── exception
-    │   ├── error.go
-    │   ├── error_handler.go
-    │   └── validation_error.go
-    ├── go.mod
-    ├── go.sum
     ├── helper
-    │   ├── generate_jwt.go
-    │   └── generate_password.go
+    │   ├── jwts
+    │   └── timeutil
     ├── internal
     │   ├── controller
-    │   │   ├── controller.go
-    │   │   ├── product
-    │   │   │   ├── controller_test.go
-    │   │   │   ├── product_controller.go
-    │   │   │   ├── product_controller_test.go
-    │   │   │   └── product_router.go
+    │   │   ├── bayar
+    │   │   ├── guru
+    │   │   ├── kelas
+    │   │   ├── siswa
+    │   │   ├── spp
     │   │   └── user
-    │   │       ├── user_controller.go
-    │   │       └── user_router.go
-    │   ├── entity
-    │   │   ├── product.go
-    │   │   └── user.go
+    │   ├── domain
+    │   │   ├── entity
+    │   │   └── model
     │   ├── middlewares
-    │   │   ├── JWTMiddleware.go
-    │   │   ├── config.go
-    │   │   ├── crypto.go
-    │   │   ├── jwks.go
-    │   │   └── jwt_claims.go
-    │   ├── model
-    │   │   ├── product_model.go
-    │   │   └── user_model.go
     │   ├── repository
-    │   │   ├── product_repository
-    │   │   │   └── product_repository_impl.go
-    │   │   ├── product_repository.go
-    │   │   ├── user_repository
-    │   │   │   └── user_repository_impl.go
-    │   │   └── user_repository.go
+    │   │   └── database
+    │   │       ├── mongo
+    │   │       ├── mysql
+    │   │       └── postgres
+    │   │           ├── bayar_repository
+    │   │           ├── guru_repository
+    │   │           ├── kelas_repository
+    │   │           ├── siswa_repository
+    │   │           ├── spp_repository
+    │   │           └── user_repository
     │   ├── service
-    │   │   ├── product_service
-    │   │   │   └── product_service_impl.go
-    │   │   ├── product_service.go
-    │   │   ├── user_service.go
-    │   │   └── user_service_impl
-    │   │       └── user_service_impl.go
-    │   └── validation
-    │       ├── product_validation.go
-    │       └── user_validation.go
-    ├── main.go
+    │   │   ├── bayar_service
+    │   │   ├── guru_service
+    │   │   ├── kelas_service
+    │   │   ├── siswa_service
+    │   │   ├── spp_service
+    │   │   └── user_service
+    │   └── validations
+    ├── meta
+    │   └── param
     ├── migrations
     │   ├── cmd
     │   │   ├── down
-    │   │   │   └── main.go
     │   │   └── up
-    │   │       └── main.go
     │   ├── mysql
-    │   │   ├── 000001_create_sample_tables.up.sql
-    │   │   ├── 000001_down_sample_tables.down.sql
-    │   │   ├── 000002_create_users_tables.up.sql
-    │   │   └── 000002_down_users_table.down.sql
     │   └── postgres
-    │       ├── 000001_create_sample_tables.up.sql
-    │       ├── 000001_down_sample_tables.down.sql
-    │       ├── 000002_create_users_tables.up.sql
-    │       └── 000002_down_users_table.down.sql
     ├── responses
-    │   └── web_response.go
-    ├── test.http
     └── vendor
 
 ## Addition 
