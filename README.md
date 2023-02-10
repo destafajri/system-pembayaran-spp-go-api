@@ -52,86 +52,51 @@ Controller -> Service -> Repository
 
 ## Project Structure example
     .
-    ├── Dockerfile
-    ├── LICENSE
-    ├── Makefile
-    ├── README.md
     ├── config
-    │   ├── config.go
-    │   ├── fiber.go
-    │   ├── mongo.go
-    │   ├── mysql.go
-    │   └── postgres.go
-    ├── docker-compose.yml
     ├── exception
-    │   ├── error.go
-    │   ├── error_handler.go
-    │   └── validation_error.go
-    ├── go.mod
-    ├── go.sum
     ├── helper
-    │   ├── generate_jwt.go
-    │   └── generate_password.go
+    │   ├── jwts
+    │   └── timeutil
     ├── internal
     │   ├── controller
-    │   │   ├── controller.go
-    │   │   ├── product
-    │   │   │   ├── controller_test.go
-    │   │   │   ├── product_controller.go
-    │   │   │   ├── product_controller_test.go
-    │   │   │   └── product_router.go
+    │   │   ├── bayar
+    │   │   ├── guru
+    │   │   ├── kelas
+    │   │   ├── siswa
+    │   │   ├── spp
     │   │   └── user
-    │   │       ├── user_controller.go
-    │   │       └── user_router.go
-    │   ├── entity
-    │   │   ├── product.go
-    │   │   └── user.go
+    │   ├── domain
+    │   │   ├── entity
+    │   │   └── model
     │   ├── middlewares
-    │   │   ├── JWTMiddleware.go
-    │   │   ├── config.go
-    │   │   ├── crypto.go
-    │   │   ├── jwks.go
-    │   │   └── jwt_claims.go
-    │   ├── model
-    │   │   ├── product_model.go
-    │   │   └── user_model.go
     │   ├── repository
-    │   │   ├── product_repository
-    │   │   │   └── product_repository_impl.go
-    │   │   ├── product_repository.go
-    │   │   ├── user_repository
-    │   │   │   └── user_repository_impl.go
-    │   │   └── user_repository.go
+    │   │   └── database
+    │   │       ├── mongo
+    │   │       ├── mysql
+    │   │       └── postgres
+    │   │           ├── bayar_repository
+    │   │           ├── guru_repository
+    │   │           ├── kelas_repository
+    │   │           ├── siswa_repository
+    │   │           ├── spp_repository
+    │   │           └── user_repository
     │   ├── service
-    │   │   ├── product_service
-    │   │   │   └── product_service_impl.go
-    │   │   ├── product_service.go
-    │   │   ├── user_service.go
-    │   │   └── user_service_impl
-    │   │       └── user_service_impl.go
-    │   └── validation
-    │       ├── product_validation.go
-    │       └── user_validation.go
-    ├── main.go
+    │   │   ├── bayar_service
+    │   │   ├── guru_service
+    │   │   ├── kelas_service
+    │   │   ├── siswa_service
+    │   │   ├── spp_service
+    │   │   └── user_service
+    │   └── validations
+    ├── meta
+    │   └── param
     ├── migrations
     │   ├── cmd
     │   │   ├── down
-    │   │   │   └── main.go
     │   │   └── up
-    │   │       └── main.go
     │   ├── mysql
-    │   │   ├── 000001_create_sample_tables.up.sql
-    │   │   ├── 000001_down_sample_tables.down.sql
-    │   │   ├── 000002_create_users_tables.up.sql
-    │   │   └── 000002_down_users_table.down.sql
     │   └── postgres
-    │       ├── 000001_create_sample_tables.up.sql
-    │       ├── 000001_down_sample_tables.down.sql
-    │       ├── 000002_create_users_tables.up.sql
-    │       └── 000002_down_users_table.down.sql
     ├── responses
-    │   └── web_response.go
-    ├── test.http
     └── vendor
 
 ## Addition 
