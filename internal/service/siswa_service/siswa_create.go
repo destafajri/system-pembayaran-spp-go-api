@@ -35,8 +35,13 @@ func (siswa *siswaServiceimpl) CreateSiswa(request *model.CreateSiswaRequest, ti
 		return nil, err
 	}
 
+	angkatan, err := validations.YearValidation(request.Angkatan)
+	if err != nil && !angkatan {
+		return nil, err
+	}
+
 	// cek nim
-	nimFound , _ := siswa.siswaRepository.CekNIS(request.NIS)
+	nimFound, _ := siswa.siswaRepository.CekNIS(request.NIS)
 	if nimFound != "" {
 		return nil, errors.New("NIM already exist")
 	}
