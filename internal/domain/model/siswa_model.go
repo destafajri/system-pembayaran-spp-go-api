@@ -75,6 +75,20 @@ type GetDetailSiswaResponse struct {
 	entity.Timestamp
 }
 
+type UpdateKelasSiswaRequest struct {
+	Kelas    string `json:"kelas"`
+	Angkatan string `json:"angkatan"`
+}
+
+type UpdateKelasSiswaResponse struct {
+	ID       string `json:"id"`
+	Nama     string `json:"nama"`
+	NIS      int    `json:"nis"`
+	Kelas    string `json:"kelas"`
+	Angkatan string `json:"angkatan"`
+	IsActive bool   `json:"is_active"`
+}
+
 // validation
 func ValidateCreateSiswaInput(request *CreateSiswaRequest) error {
 	err := validation.ValidateStruct(request,
@@ -84,6 +98,22 @@ func ValidateCreateSiswaInput(request *CreateSiswaRequest) error {
 		validation.Field(&request.Kelas, validation.Required),
 		validation.Field(&request.NIS, validation.Required),
 		validation.Field(&request.Nama, validation.Required),
+		validation.Field(&request.Angkatan, validation.Required),
+	)
+
+	if err != nil {
+		log.Println(err)
+		panic(exception.ValidationError{
+			Message: err.Error(),
+		})
+	}
+
+	return nil
+}
+
+func ValidateUpdateKelasSiswaInput(request *UpdateKelasSiswaRequest) error {
+	err := validation.ValidateStruct(request,
+		validation.Field(&request.Kelas, validation.Required),
 		validation.Field(&request.Angkatan, validation.Required),
 	)
 

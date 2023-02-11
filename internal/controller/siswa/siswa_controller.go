@@ -189,3 +189,34 @@ func (controller *SiswaController) DeleteSiswa(c *fiber.Ctx) error {
 		Message: "Delete Siswa Success",
 	})
 }
+
+func (controller *SiswaController) UpdateKelasSiswa(c *fiber.Ctx) error {
+	var (
+		input    model.UpdateKelasSiswaRequest
+		siswa_id = c.Params("siswa_id")
+		token, _ = jwts.JWTAuthorizationHeader(c)
+	)
+
+	// claims
+	claim, _ := jwts.GetClaims(token)
+	if claim.Role != "admin" {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := c.BodyParser(&input)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	resp, err := controller.siswaService.UpdateKelasSiswa(siswa_id, &input)
+	if err != nil {
+		return exception.ErrorHandler(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(responses.WebResponse{
+		Code:    fiber.StatusOK,
+		Status:  "SUCCESS",
+		Message: "Update Kelas Siswa Success",
+		Data:    resp,
+	})
+}
