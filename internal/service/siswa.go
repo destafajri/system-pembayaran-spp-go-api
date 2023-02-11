@@ -15,4 +15,5 @@ type SiswaService interface {
 	ActivateSiswa(siswa_id string, timestamp time.Time) error
 	DeactivateSiswa(siswa_id string, timestamp time.Time) error
 	DeleteSiswa(siswa_id string) error
+	UpdateKelasSiswa(siswa_id string, input *model.UpdateKelasSiswaRequest) (*model.UpdateKelasSiswaResponse, error)
 }
