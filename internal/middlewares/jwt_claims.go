@@ -8,7 +8,7 @@ import (
 
 // helper variable
 var (
-	JWT_SECRET_KEY = []byte(os.Getenv("KEY_JWT"))
+	JWT_SECRET_KEY = []byte(os.Getenv("KEYJWT"))
 )
 
 // claims struct
