@@ -1,11 +1,11 @@
 package user
 
 import (
+	"os"
 	"time"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/exception"
 	"github.com/destafajri/system-pembayaran-spp-go-api/helper/jwts"
-	"github.com/destafajri/system-pembayaran-spp-go-api/internal/middlewares"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/service"
 	"github.com/destafajri/system-pembayaran-spp-go-api/meta"
@@ -24,15 +24,23 @@ func NewUserController(userService *service.UserService) UserController {
 func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 	var (
 		request model.CreateAdminRequest
+		apiKey  = c.Get("API-KEY")
 	)
 
 	// API KEY middleware
-	err := middlewares.APIKey(c)
-	if err != nil {
-		return exception.ErrorHandler(c, err)
+	if apiKey == "" {
+		return c.Status(fiber.StatusForbidden).JSON(responses.WebResponse{
+			Code:    fiber.StatusForbidden,
+			Status:  "Permission",
+			Message: "Missing API-KEY on the header",
+		})
 	}
 
-	err = c.BodyParser(&request)
+	if apiKey != os.Getenv("APIKEY") {
+		return exception.ErrPermissionNotAllowed
+	}
+
+	err := c.BodyParser(&request)
 	if err != nil {
 		return exception.ErrorHandler(c, err)
 	}
