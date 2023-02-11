@@ -21,6 +21,7 @@ type SiswaRepository interface {
 	DeactivateSiswa(user_id, siswa_id string, timestamp time.Time) error
 
 	DeleteSiswa(user_id, siswa_id string) error
+	UpdateKelasSiswa(siswa_id, kelas_id, angkatan string) error 
 
 	GetUserID(siswa_id string) (string, error)
 	GetKelasID(kelas string) (string, error)
