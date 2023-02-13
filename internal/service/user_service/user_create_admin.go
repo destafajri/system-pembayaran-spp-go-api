@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/helper/password"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	validations "github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
@@ -33,6 +34,12 @@ func (user *userServiceimpl) CreateAdmin(request *model.CreateAdminRequest, time
 		return nil, err
 	}
 
+	// hash password
+	passwordHash, err := password.HashPassword(request.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	t := entity.Timestamp{
 		CreatedAt: timestamp.Local(),
 		UpdatedAt: timestamp.Local(),
@@ -42,7 +49,7 @@ func (user *userServiceimpl) CreateAdmin(request *model.CreateAdminRequest, time
 		ID:        uuid.New().String(),
 		Email:     request.Email,
 		Username:  request.Username,
-		Password:  request.Password,
+		Password:  passwordHash,
 		Role:      "admin",
 		IsActive:  true,
 		Timestamp: t,

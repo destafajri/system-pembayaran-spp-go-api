@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/helper/password"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
@@ -46,6 +47,12 @@ func (siswa *siswaServiceimpl) CreateSiswa(request *model.CreateSiswaRequest, ti
 		return nil, errors.New("NIM already exist")
 	}
 
+	// hash password
+	passwordHash, err := password.HashPassword(request.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	t := entity.Timestamp{
 		CreatedAt: timestamp.Local(),
 		UpdatedAt: timestamp.Local(),
@@ -61,7 +68,7 @@ func (siswa *siswaServiceimpl) CreateSiswa(request *model.CreateSiswaRequest, ti
 		ID:        uuid.New().String(),
 		Email:     request.Email,
 		Username:  request.Username,
-		Password:  request.Password,
+		Password:  passwordHash,
 		Role:      "siswa",
 		IsActive:  true,
 		Timestamp: t,

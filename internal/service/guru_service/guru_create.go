@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/destafajri/system-pembayaran-spp-go-api/helper/password"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/entity"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/domain/model"
 	"github.com/destafajri/system-pembayaran-spp-go-api/internal/validations"
@@ -34,6 +35,12 @@ func (guru *guruServiceimpl) CreateGuru(request *model.CreateGuruRequest, timest
 		return nil, err
 	}
 
+	// hash password
+	passwordHash, err := password.HashPassword(request.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	t := entity.Timestamp{
 		CreatedAt: timestamp.Local(),
 		UpdatedAt: timestamp.Local(),
@@ -43,7 +50,7 @@ func (guru *guruServiceimpl) CreateGuru(request *model.CreateGuruRequest, timest
 		ID:        uuid.New().String(),
 		Email:     request.Email,
 		Username:  request.Username,
-		Password:  request.Password,
+		Password:  passwordHash,
 		Role:      "guru",
 		IsActive:  true,
 		Timestamp: t,

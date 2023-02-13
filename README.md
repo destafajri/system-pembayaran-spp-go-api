@@ -5,6 +5,7 @@ System Pembayaran SPP API
 - [API Documentation](https://whimsical.com/erd-table-api-map-Umr1mzU2SY3jAqJyDa7KMX)
 - [API Contract](https://www.notion.so/e785eb0dfdc245659df81b6e91bf40a5?v=2176e61ec8d744d4af0b35e613895ad9)
 - [Postman Collection](https://documenter.getpostman.com/view/22138766/2s935sohZ6)
+- [Github Repository](https://github.com/destafajri/system-pembayaran-spp-go-api)
 
 ## How to use
 - Please clone or download this repository.
@@ -57,6 +58,7 @@ Controller -> Service -> Repository
     ├── exception
     ├── helper
     │   ├── jwts
+    │   ├── password
     │   └── timeutil
     ├── internal
     │   ├── controller
