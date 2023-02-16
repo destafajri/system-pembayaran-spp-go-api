@@ -71,9 +71,7 @@ func (repo *sppImplementation) getDetailSppQuery(spp_id string) (string, []inter
 																tanggal_bayar
 															FROM
 																bayar
-															JOIN spp ON bayar.spp_id = spp.id
-															LIMIT 1
-														)
+															JOIN spp ON bayar.spp_id = spp.id)
 											ELSE null
 											END)),
 						'status', ((CASE
@@ -83,7 +81,6 @@ func (repo *sppImplementation) getDetailSppQuery(spp_id string) (string, []inter
 											FROM
 												bayar
 											WHERE spp_id = spp.id
-											LIMIT 1
 											) IS NOT NULL )
 											THEN 'paid'
 										ELSE 'unpaid'
@@ -104,7 +101,6 @@ func (repo *sppImplementation) getDetailSppQuery(spp_id string) (string, []inter
 				siswa.kelas_id = kelas.id
 			WHERE 
 				spp.id = ?
-			LIMIT 1
 			`, spp_id)
 
 	// build.Print()
