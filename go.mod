@@ -15,11 +15,20 @@ require (
 )
 
 require (
+	github.com/Microsoft/go-winio v0.6.0 // indirect
+	github.com/containerd/containerd v1.6.18 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/opencontainers/image-spec v1.1.0-rc2 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
+	google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44 // indirect
+	google.golang.org/grpc v1.53.0 // indirect
 )
 
 require (
