@@ -55,7 +55,8 @@ func (controller *UserController) CreateAdmin(c *fiber.Ctx) error {
 		Status:  "SUCCESS",
 		Message: "Create Admin Success",
 		Data:    response,
-	})
+	},
+)
 }
 
 func (controller *UserController) Login(c *fiber.Ctx) error {
