@@ -1,13 +1,44 @@
 version: "3.9"
 
 services:
-  mysql:
-    container_name: mysql
+  server:
+    container_name: golang-api
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MONGO_URI: mongodb://mongo:mongo@mongo-golang-system-pembayaran-spp:27017
+      POSTGRES_URL: postgres://golang_user:mypassword@postgres-golang-system-pembayaran-spp:5432/golang_db?sslmode=disable
+      MYSQL_URL: root:secret@tcp(mysql-golang-system-pembayaran-spp:3306)/sample?parseTime=true
+    ports:
+      - 9000:9000
+    volumes:
+      - service-golang-api:/golang
+    network_mode: system-pembayaran-spp_golang-network
+
+  postgres-golang-system-pembayaran-spp:
+    container_name: postgres-golang-system-pembayaran-spp
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - postgres-db:/var/lib/postgresql
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: golang_user
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: golang_db
+    networks:
+      - golang-network
+  mysql-golang-system-pembayaran-spp:
+    container_name: mysql-golang-system-pembayaran-spp
     image: mysql:latest
     restart: always
-    command: --default-authentication-plugin=caching_sha2_password
     volumes:
-      - mysql_db_data:/var/lib/mysql
+      - mysql-db:/var/lib/mysql
     expose:
       - 3306
     ports:
@@ -15,38 +46,31 @@ services:
     environment:
       MYSQL_DATABASE: sample
       MYSQL_ROOT_PASSWORD: secret
-  postgres:
-    container_name: postgres
-    image: postgres:latest
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_db_data:/var/lib/postgresql/data
-  golang-mongo:
-    container_name: golang-mongo
-    image: mongo:4.4
+    networks:
+      - golang-network
+  mongodb-golang-system-pembayaran-spp:
+    container_name: mongo-golang-system-pembayaran-spp
+    image: mongo:latest
     ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo
-  server_application:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-    env_file:
-      - .env
+    volumes:
+      - mongo-db:/var/lib/mongo
     networks:
-      - default
-    ports:
-    - "9000:9000"
+      - golang-network
+
 volumes:
-  mysql_db_data:
-    name: mysql_db_data
-  postgres_db_data:
-    name: postgres_db_data
+  mysql-db:
+    name: mysql-db
+  postgres-db:
+    name: postgres-db
+  mongo-db:
+    name: mongo-db
+  service-golang-api:
+    name: service-golang-api
+
+networks:
+  golang-network:
+    driver: bridge
