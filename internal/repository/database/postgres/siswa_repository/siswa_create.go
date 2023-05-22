@@ -1,6 +1,7 @@
 package siswa_repository
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/destafajri/system-pembayaran-spp-go-api/config"
@@ -10,8 +11,21 @@ import (
 )
 
 func (siswa *siswaImplementation) CreateSiswa(userReq *entity.UserEntity, siswaReq *entity.SiswaEntity) (*model.CreateSiswaResponse, error) {
-	_, cancel := config.NewPostgresContext()
+	ctx, cancel := config.NewPostgresContext()
 	defer cancel()
+
+	// Create a helper function for preparing failure results.
+	fail := func(err error) error {
+		return fmt.Errorf("CREATE SISWA: %v", err)
+	}
+
+	// Get a Tx for making transaction requests.
+	tx, err := siswa.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, fail(err)
+	}
+	// Defer a rollback in case anything fails.
+	defer tx.Rollback()
 
 	query1 := `INSERT INTO users(
 			id,
@@ -36,7 +50,7 @@ func (siswa *siswaImplementation) CreateSiswa(userReq *entity.UserEntity, siswaR
 		userReq.UpdatedAt,
 	}
 
-	_, err := siswa.db.Exec(query1, values...)
+	_, err = siswa.db.Exec(query1, values...)
 	if err != nil {
 		log.Println(err)
 		return nil, errors.New("user already exist")
@@ -63,10 +77,15 @@ func (siswa *siswaImplementation) CreateSiswa(userReq *entity.UserEntity, siswaR
 		siswaReq.IsActive,
 	}
 
-	_, err = siswa.db.Exec(query2, value...)
+	_, err = siswa.db.ExecContext(ctx, query2, value...)
 	if err != nil {
 		log.Println(err)
 		return nil, errors.New("siswa already exist")
+	}
+
+	// Commit the transaction.
+	if err = tx.Commit(); err != nil {
+		return nil, fail(err)
 	}
 
 	resp := model.CreateSiswaResponse{
